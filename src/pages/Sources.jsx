@@ -1,7 +1,6 @@
 ﻿
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Source } from "@/api/entities";
-import { News } from "@/api/entities";
 import { Button } from "@/components/ui/button";
 import { Plus, Globe, Settings, RefreshCw, AlertTriangle } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
@@ -17,6 +16,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { resetSources } from "@/api/functions"; // Reset local data to defaults
+import { useToast } from "@/components/ui/use-toast";
 
 import SourceCard from "../components/sources/SourceCard";
 import SourceForm from "../components/sources/SourceForm";
@@ -30,21 +30,30 @@ export default function SourcesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [scrapingSourceId, setScrapingSourceId] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const [loadError, setLoadError] = useState(null);
+  const { toast } = useToast();
 
-  useEffect(() => {
-    loadSources();
-  }, []);
-
-  const loadSources = async () => {
+  const loadSources = useCallback(async () => {
     setIsLoading(true);
+    setLoadError(null);
     try {
       const data = await Source.list('-created_date');
       setSources(data);
     } catch (error) {
       console.error("Erro ao carregar fontes:", error);
+      setLoadError("Não foi possível carregar as fontes. Tente novamente.");
+      toast({
+        variant: "destructive",
+        title: "Falha ao carregar fontes",
+        description: error.message,
+      });
     }
     setIsLoading(false);
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadSources();
+  }, [loadSources]);
 
   const handleSubmit = async (sourceData) => {
     try {
@@ -56,9 +65,17 @@ export default function SourcesPage() {
       setShowForm(false);
       setEditingSource(null);
       loadSources();
+      toast({
+        title: editingSource ? "Fonte atualizada" : "Fonte criada",
+        description: "As alterações foram salvas com sucesso.",
+      });
     } catch (error) {
       console.error("Erro ao salvar fonte:", error);
-      alert("Ocorreu um erro ao salvar a fonte. Verifique o console para mais detalhes.");
+      toast({
+        variant: "destructive",
+        title: "Erro ao salvar fonte",
+        description: error.message,
+      });
     }
   };
 
@@ -76,8 +93,17 @@ export default function SourcesPage() {
       try {
         await Source.delete(deleteConfirmation);
         loadSources();
+        toast({
+          title: "Fonte removida",
+          description: "A fonte foi excluída do catálogo.",
+        });
       } catch (error) {
         console.error("Erro ao excluir fonte:", error);
+        toast({
+          variant: "destructive",
+          title: "Erro ao excluir fonte",
+          description: error.message,
+        });
       } finally {
         setDeleteConfirmation(null);
       }
@@ -88,82 +114,104 @@ export default function SourcesPage() {
     try {
       await Source.update(source.id, { ...source, is_active: !source.is_active });
       loadSources();
+      toast({
+        title: "Status atualizado",
+        description: `A fonte ${source.is_active ? "foi desativada" : "está ativa"}.`,
+      });
     } catch (error) {
       console.error("Erro ao atualizar status da fonte:", error);
+      toast({
+        variant: "destructive",
+        title: "Falha ao atualizar status",
+        description: error.message,
+      });
     }
   };
 
   const handleScrapeSource = async (source) => {
     setScrapingSourceId(source.id);
-    
+
     try {
-        if (source.update_method === 'rss' && source.rss_feed_url) {
-            console.log(`Buscando via RSS para: ${source.name}`);
-            const { data: rssResult } = await fetchRealNews({
-                rss_feed_url: source.rss_feed_url,
-                source_id: source.id,
-                source_name: source.name,
-                category: "geral" // Categoria genÃ©rica para teste
-            });
+      if (source.update_method === 'rss' && source.rss_feed_url) {
+        const { data: rssResult } = await fetchRealNews({
+          rss_feed_url: source.rss_feed_url,
+          source_id: source.id,
+          source_name: source.name,
+          category: "geral",
+        });
 
-            if (rssResult && rssResult.success) {
-                alert(`${rssResult.created_count || 0} notÃ­cias criadas a partir do RSS de ${source.name}!`);
-            } else {
-                 throw new Error(rssResult?.error || "Falha ao buscar RSS.");
-            }
-
-        } else { // Fallback para LLM
-            console.log(`Buscando via LLM para: ${source.name}`);
-            const categories = ["contabil", "fiscal", "folha_pagamento", "tributaria", "reforma_tributaria"];
-            const selectedCategory = categories[Math.floor(Math.random() * categories.length)];
-            
-            const categoryPrompts = {
-                contabil: "notÃ­cias sobre normas contÃ¡beis, demonstraÃ§Ãµes financeiras, balanÃ§os, CPC, CFC",
-                fiscal: "notÃ­cias sobre legislaÃ§Ã£o fiscal, impostos, declaraÃ§Ãµes, DCTF, SPED, Receita Federal",
-                folha_pagamento: "notÃ­cias sobre eSocial, folha de pagamento, trabalhistas, INSS, FGTS",
-                tributaria: "notÃ­cias sobre direito tributÃ¡rio, jurisprudÃªncia tributÃ¡ria, STF, planejamento tributÃ¡rio",
-                reforma_tributaria: "notÃ­cias sobre reforma tributÃ¡ria brasileira, IBS, CBS, IS, PEC da reforma"
-            };
-
-            const newsData = await generateNewsViaLLM({
-                sourceName: source.name,
-                sourceDescription: source.description || "",
-                topic: categoryPrompts[selectedCategory],
-                defaultCategory: selectedCategory,
-                sourceId: source.id,
-                sourceWebsite: source.website 
-            });
-
-            await safeCreateNews(newsData);
-            alert(`Nova notÃ­cia criada com sucesso via IA a partir de ${source.name}!`);
+        if (rssResult && rssResult.success) {
+          toast({
+            title: "Busca concluída",
+            description: `${rssResult.created_count || rssResult.created_news?.length || 0} notícia(s) criadas a partir do RSS de ${source.name}.`,
+          });
+        } else {
+          throw new Error(rssResult?.error || "Falha ao buscar RSS.");
         }
+      } else {
+        const categories = ["contabil", "fiscal", "folha_pagamento", "tributaria", "reforma_tributaria"];
+        const selectedCategory = categories[Math.floor(Math.random() * categories.length)];
 
+        const categoryPrompts = {
+          contabil: "notícias sobre normas contábeis, demonstrações financeiras, balanços, CPC, CFC",
+          fiscal: "notícias sobre legislação fiscal, impostos, declarações, DCTF, SPED, Receita Federal",
+          folha_pagamento: "notícias sobre eSocial, folha de pagamento, trabalhistas, INSS, FGTS",
+          tributaria: "notícias sobre direito tributário, jurisprudência tributária, STF, planejamento tributário",
+          reforma_tributaria: "notícias sobre reforma tributária brasileira, IBS, CBS, IS, PEC da reforma",
+        };
+
+        const newsData = await generateNewsViaLLM({
+          sourceName: source.name,
+          sourceDescription: source.description || "",
+          topic: categoryPrompts[selectedCategory],
+          defaultCategory: selectedCategory,
+          sourceId: source.id,
+          sourceWebsite: source.website,
+        });
+
+        await safeCreateNews(newsData);
+        toast({
+          title: "Notícia criada",
+          description: `Nova notícia adicionada a partir de ${source.name}.`,
+        });
+      }
     } catch (error) {
-      console.error("Erro ao buscar notÃ­cias:", error);
-      alert(`Erro ao buscar/criar notÃ­cia: ${error.message}`); 
+      console.error("Erro ao buscar notícias:", error);
+      toast({
+        variant: "destructive",
+        title: "Erro ao criar notícia",
+        description: error.message,
+      });
     } finally {
       setScrapingSourceId(null);
     }
   };
 
   const handleResetSources = async () => {
-    if (!confirm('âš ï¸ ATENÃ‡ÃƒO: Isso irÃ¡ deletar TODAS as fontes atuais e criar novas fontes RSS brasileiras. Confirmar?')) {
+    if (!confirm('⚠️ ATENÇÃO: isso irá apagar todas as fontes atuais e recriar o catálogo padrão. Deseja continuar?')) {
       return;
     }
 
     setIsLoading(true);
     try {
       const response = await resetSources();
-      
+
       if (response.data.success) {
-        alert(`âœ… ${response.data.message}`);
+        toast({
+          title: 'Fontes recriadas',
+          description: response.data.message,
+        });
         await loadSources();
       } else {
         throw new Error(response.data.error);
       }
     } catch (error) {
       console.error('Erro ao resetar fontes:', error);
-      alert(`Erro: ${error.message}`);
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao recriar fontes',
+        description: error.message,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -226,6 +274,12 @@ export default function SourcesPage() {
             </div>
           </div>
 
+
+          {loadError && (
+            <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+              {loadError}
+            </div>
+          )}
           {/* Form */}
           <AnimatePresence>
             {showForm && (

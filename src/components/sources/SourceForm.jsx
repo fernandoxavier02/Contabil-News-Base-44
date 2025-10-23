@@ -10,6 +10,18 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Globe, Save, X, Rss, Code } from "lucide-react";
 
+const URL_FIELDS = ["website", "logo_url", "rss_feed_url", "api_endpoint"];
+
+function isValidUrl(value) {
+  if (!value) return true;
+  try {
+    const parsed = new URL(value);
+    return Boolean(parsed.protocol && parsed.host);
+  } catch (error) {
+    return false;
+  }
+}
+
 export default function SourceForm({ source, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
     name: source?.name || "",
@@ -24,12 +36,37 @@ export default function SourceForm({ source, onSubmit, onCancel }) {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
+
+  const validateForm = (data) => {
+    const errors = {};
+
+    if (!data.name.trim()) {
+      errors.name = "Informe um nome para a fonte.";
+    }
+
+    URL_FIELDS.forEach((field) => {
+      if (!isValidUrl(data[field])) {
+        errors[field] = "Informe uma URL válida (incluindo http/https).";
+      }
+    });
+
+    if (data.update_method === "rss" && !data.rss_feed_url.trim()) {
+      errors.rss_feed_url = "O feed RSS é obrigatório quando o método escolhido for RSS.";
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
+      if (!validateForm(formData)) {
+        return;
+      }
       await onSubmit(formData);
     } catch (error) {
       console.error("Erro ao salvar fonte:", error);
@@ -43,6 +80,12 @@ export default function SourceForm({ source, onSubmit, onCancel }) {
       ...prev,
       [field]: value
     }));
+    if (formErrors[field]) {
+      setFormErrors((prev) => ({
+        ...prev,
+        [field]: undefined,
+      }));
+    }
   };
 
   return (
@@ -71,6 +114,9 @@ export default function SourceForm({ source, onSubmit, onCancel }) {
                   placeholder="Ex: Receita Federal"
                   required
                 />
+                {formErrors.name && (
+                  <p className="text-sm text-red-600">{formErrors.name}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -112,6 +158,9 @@ export default function SourceForm({ source, onSubmit, onCancel }) {
                   onChange={(e) => handleInputChange('website', e.target.value)}
                   placeholder="https://exemplo.com"
                 />
+                {formErrors.website && (
+                  <p className="text-sm text-red-600">{formErrors.website}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -123,6 +172,9 @@ export default function SourceForm({ source, onSubmit, onCancel }) {
                   onChange={(e) => handleInputChange('logo_url', e.target.value)}
                   placeholder="https://exemplo.com/logo.png"
                 />
+                {formErrors.logo_url && (
+                  <p className="text-sm text-red-600">{formErrors.logo_url}</p>
+                )}
               </div>
             </div>
 
@@ -157,6 +209,9 @@ export default function SourceForm({ source, onSubmit, onCancel }) {
                       placeholder="https://exemplo.com/feed.xml"
                       className="pl-10"
                     />
+                    {formErrors.rss_feed_url && (
+                      <p className="mt-1 text-sm text-red-600">{formErrors.rss_feed_url}</p>
+                    )}
                   </div>
                 </div>
               )}

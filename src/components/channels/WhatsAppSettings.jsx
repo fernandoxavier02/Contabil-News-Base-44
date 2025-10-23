@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import { WhatsAppConfig } from "@/api/entities";
 import { Button } from "@/components/ui/button";
 import { Plus, MessageCircle, AlertCircle } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/components/ui/use-toast";
 
 import WhatsAppConfigCard from "./WhatsAppConfigCard";
 import WhatsAppConfigForm from "./WhatsAppConfigForm";
@@ -16,6 +16,7 @@ export default function WhatsAppSettings({ onStatsUpdate }) {
   const [editingConfig, setEditingConfig] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { toast } = useToast();
 
   const loadConfigs = useCallback(async () => {
     setIsLoading(true);
@@ -53,8 +54,16 @@ export default function WhatsAppSettings({ onStatsUpdate }) {
     try {
       if (editingConfig) {
         await WhatsAppConfig.update(editingConfig.id, configData);
+        toast({
+          title: "Configuração atualizada",
+          description: "Os dados do WhatsApp foram salvos.",
+        });
       } else {
         await WhatsAppConfig.create(configData);
+        toast({
+          title: "Configuração criada",
+          description: "Um novo canal WhatsApp foi cadastrado.",
+        });
       }
       setShowForm(false);
       setEditingConfig(null);
@@ -62,7 +71,11 @@ export default function WhatsAppSettings({ onStatsUpdate }) {
       setTimeout(() => loadConfigs(), 500);
     } catch (error) {
       console.error("Erro ao salvar configuração:", error);
-      alert("Ocorreu um erro ao salvar a configuração.");
+      toast({
+        variant: "destructive",
+        title: "Erro ao salvar configuração",
+        description: error.message,
+      });
     }
   };
 
@@ -76,18 +89,37 @@ export default function WhatsAppSettings({ onStatsUpdate }) {
       try {
         await WhatsAppConfig.delete(configId);
         setTimeout(() => loadConfigs(), 500);
+        toast({
+          title: "Configuração removida",
+          description: "O canal WhatsApp foi excluído.",
+        });
       } catch (error) {
         console.error("Erro ao excluir configuração:", error);
+        toast({
+          variant: "destructive",
+          title: "Erro ao excluir configuração",
+          description: error.message,
+        });
       }
     }
   };
 
   const handleToggleActive = async (config) => {
     try {
-      await WhatsAppConfig.update(config.id, { ...config, is_active: !config.is_active });
+      const nextStatus = !config.is_active;
+      await WhatsAppConfig.update(config.id, { ...config, is_active: nextStatus });
       setTimeout(() => loadConfigs(), 500);
+      toast({
+        title: "Status atualizado",
+        description: `O canal ${config.channel_name || 'WhatsApp'} ${nextStatus ? 'está ativo' : 'foi desativado'}.`,
+      });
     } catch (error) {
       console.error("Erro ao atualizar status:", error);
+      toast({
+        variant: "destructive",
+        title: "Erro ao atualizar status",
+        description: error.message,
+      });
     }
   };
 

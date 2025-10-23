@@ -233,14 +233,6 @@ const emailStore = createStore(STORAGE_KEYS.emailConfigs, {
   },
 });
 
-function ensureRemote(route) {
-  if (!remoteApi.isRouteConfigured(route)) {
-    throw new Error(
-      `[integração] Endpoint "${route}" não configurado. Ajuste src/api/remoteApi.js e defina VITE_API_BASE_URL.`
-    );
-  }
-}
-
 async function syncCreatedNews(items = []) {
   if (!Array.isArray(items)) return [];
 
@@ -271,25 +263,79 @@ async function syncSources(items = []) {
   return persisted;
 }
 
+function buildDemoNewsFromSource(params = {}) {
+  const now = new Date();
+  const baseTitle = params.source_name || params.sourceName || "Fonte Contábil";
+  const category = params.category || params.defaultCategory || "contabil";
+
+  return {
+    title: `${baseTitle}: atualização de ${now.toLocaleDateString("pt-BR")}`,
+    summary:
+      params.summary ||
+      `Resumo automático gerado para ${baseTitle}. Utilize este item para validar integrações de notícias.`,
+    content:
+      params.content ||
+      `Este é um conteúdo fictício criado para o modo de demonstração. Ajuste o endpoint "fetchRealNews" para receber dados reais do backend.`,
+    category,
+    importance: "media",
+    tags: [category],
+    source_name: baseTitle,
+    external_url: params.rss_feed_url || params.sourceWebsite || null,
+    publication_date: now.toISOString().split("T")[0],
+  };
+}
+
 async function fetchRealNews(params) {
-  ensureRemote("fetchRealNews");
-  const data = await remoteApi.fetchRealNews(params);
-  if (Array.isArray(data?.created_news)) {
-    const created = await syncCreatedNews(data.created_news);
-    return {
-      data: {
-        ...data,
-        created_news: created,
-      },
-    };
+  if (remoteApi.isRouteConfigured("fetchRealNews")) {
+    const data = await remoteApi.fetchRealNews(params);
+    if (Array.isArray(data?.created_news)) {
+      const created = await syncCreatedNews(data.created_news);
+      return {
+        data: {
+          ...data,
+          created_news: created,
+        },
+      };
+    }
+    return { data };
   }
-  return { data };
+
+  const demoPayload = buildDemoNewsFromSource(params);
+  const created = await newsStore.create(demoPayload);
+  return {
+    data: {
+      success: true,
+      message:
+        "Modo demonstração: configure o endpoint `fetchRealNews` para consumir notícias reais.",
+      created_count: 1,
+      created_news: [created],
+    },
+  };
 }
 
 async function verifyNewsDates(params) {
-  ensureRemote("verifyNewsDates");
-  const data = await remoteApi.verifyNewsDates(params);
-  return { data };
+  if (remoteApi.isRouteConfigured("verifyNewsDates")) {
+    const data = await remoteApi.verifyNewsDates(params);
+    return { data };
+  }
+
+  const records = await newsStore.list();
+  const today = new Date().toISOString().split("T")[0];
+  const invalid = records.filter((item) => item.publication_date > today);
+
+  return {
+    data: {
+      success: true,
+      total_news: records.length,
+      invalid_dates: invalid.map((item) => ({
+        id: item.id,
+        title: item.title,
+        publication_date: item.publication_date,
+      })),
+      message:
+        "Modo demonstração: nenhuma verificação externa executada. Configure `verifyNewsDates` para auditoria real.",
+    },
+  };
 }
 
 async function clearAllNews() {
@@ -313,12 +359,48 @@ async function resetSources() {
   await sourceStore.clear();
 
   if (!remoteApi.isRouteConfigured("resetSources")) {
+    const demoSources = [
+      {
+        name: "Receita Federal",
+        description: "Atualizações oficiais sobre legislação tributária e fiscal.",
+        website: "https://www.gov.br/receitafederal",
+        logo_url: "https://logodownload.org/wp-content/uploads/2016/10/receita-federal-logo.png",
+        update_method: "rss",
+        rss_feed_url: "https://www.gov.br/receitafederal/pt-br/assuntos/noticias/rss",
+        is_active: true,
+        credibility_level: "alta",
+      },
+      {
+        name: "Conselho Federal de Contabilidade",
+        description: "Notícias e resoluções do CFC para profissionais contábeis.",
+        website: "https://cfc.org.br",
+        logo_url: "https://cfc.org.br/wp-content/themes/cfc/assets/images/logo.svg",
+        update_method: "llm",
+        is_active: true,
+        credibility_level: "alta",
+      },
+      {
+        name: "Portal Tributário",
+        description: "Curadoria de novidades fiscais e trabalhistas.",
+        website: "https://www.portaltributario.com.br",
+        update_method: "llm",
+        is_active: false,
+        credibility_level: "media",
+      },
+    ];
+
+    const created = [];
+    for (const source of demoSources) {
+      const record = await sourceStore.create(source);
+      created.push(record);
+    }
+
     return {
       data: {
         success: true,
         message:
-          "Fontes locais limpas. Configure sua API e atualize manualmente para sincronizar fontes reais.",
-        sources: [],
+          "Modo demonstração: fontes de exemplo recriadas. Configure `resetSources` para sincronizar com sua API.",
+        sources: created,
       },
     };
   }
@@ -335,32 +417,79 @@ async function resetSources() {
 }
 
 async function sendToTelegram(payload) {
-  ensureRemote("sendToTelegram");
-  const data = await remoteApi.sendToTelegram(payload);
-  return { data };
+  if (remoteApi.isRouteConfigured("sendToTelegram")) {
+    const data = await remoteApi.sendToTelegram(payload);
+    return { data };
+  }
+
+  return {
+    data: {
+      success: true,
+      message:
+        "Modo demonstração: nenhuma mensagem real enviada. Configure `sendToTelegram` para habilitar o disparo.",
+      echo: payload,
+    },
+  };
 }
 
 async function sendToWhatsApp(payload) {
-  ensureRemote("sendToWhatsApp");
-  const data = await remoteApi.sendToWhatsApp(payload);
-  return { data };
+  if (remoteApi.isRouteConfigured("sendToWhatsApp")) {
+    const data = await remoteApi.sendToWhatsApp(payload);
+    return { data };
+  }
+
+  return {
+    data: {
+      success: true,
+      message:
+        "Modo demonstração: nenhuma mensagem real enviada. Configure `sendToWhatsApp` para habilitar o disparo.",
+      echo: payload,
+    },
+  };
 }
 
 async function sendToTeams(payload) {
-  ensureRemote("sendToTeams");
-  const data = await remoteApi.sendToTeams(payload);
-  return { data };
+  if (remoteApi.isRouteConfigured("sendToTeams")) {
+    const data = await remoteApi.sendToTeams(payload);
+    return { data };
+  }
+
+  return {
+    data: {
+      success: true,
+      message:
+        "Modo demonstração: nenhuma mensagem real enviada. Configure `sendToTeams` para habilitar o disparo.",
+      echo: payload,
+    },
+  };
 }
 
 async function sendToEmail(payload) {
-  ensureRemote("sendToEmail");
-  const data = await remoteApi.sendToEmail(payload);
-  return { data };
+  if (remoteApi.isRouteConfigured("sendToEmail")) {
+    const data = await remoteApi.sendToEmail(payload);
+    return { data };
+  }
+
+  return {
+    data: {
+      success: true,
+      message:
+        "Modo demonstração: nenhuma mensagem real enviada. Configure `sendToEmail` para habilitar o disparo.",
+      echo: payload,
+    },
+  };
 }
 
 async function generateNewsViaLLM(params) {
-  ensureRemote("generateNews");
-  return remoteApi.generateNews(params);
+  if (remoteApi.isRouteConfigured("generateNews")) {
+    return remoteApi.generateNews(params);
+  }
+
+  const demoNews = buildDemoNewsFromSource(params);
+  return {
+    ...demoNews,
+    importance: params.importance || "media",
+  };
 }
 
 export const localDb = {
