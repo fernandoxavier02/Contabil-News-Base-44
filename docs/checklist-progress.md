@@ -11,8 +11,8 @@ Use este arquivo para acompanhar o progresso das verificações descritas em `do
 ## 2. Sincronização de dados
 - [ ] Endpoint `fetchRealNews` retorna `created_news`.
 - [ ] Endpoint `resetSources` devolve `sources`.
-- [ ] Estratégia de limpeza do cache local definida.
-- [ ] Normalização de datas validada.
+- [x] Estratégia de limpeza do cache local definida.
+- [x] Normalização de datas validada.
 
 ## 3. Cadastro e edição
 - [ ] Validação de campos nas telas de fontes/canais.

@@ -41,6 +41,8 @@ Adapte a camada `remoteApi` se o seu formato for diferente.
 
 ## 4. Checklist de integração
 
+- `.env.local.example` já disponível com todos os placeholders necessários.
+
 ### 4.1 Configuração inicial
 - [x] Criar `.env.local` com `VITE_API_BASE_URL`.
 - [ ] Incluir `VITE_API_TOKEN` caso a API exija autenticação.
@@ -51,8 +53,8 @@ Adapte a camada `remoteApi` se o seu formato for diferente.
 ### 4.2 Sincronização de dados
 - [ ] Implementar endpoint `fetchRealNews` retornando `created_news`.
 - [ ] Ajustar `resetSources` para devolver `sources` atualizadas.
-- [ ] Definir política de limpeza do cache local (ou optar por remover `localStorage`).
-- [ ] Revisar normalização de datas (`publication_date`, `created_at`, etc.).
+- [x] Definir política de limpeza do cache local (ou optar por remover `localStorage`).
+- [x] Revisar normalização de datas (`publication_date`, `created_at`, etc.).
 
 ### 4.3 Cadastro e edição
 - [ ] Validar campos obrigatórios nas telas de fontes/canais.
