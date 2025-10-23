@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .env
+
+# Avoid nested repository
+Contabil-News-Base-44/
