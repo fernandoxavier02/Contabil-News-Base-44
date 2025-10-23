@@ -24,12 +24,48 @@ export default function WhatsAppConfigForm({ config, onSubmit, onCancel }) {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
+
+  const validateForm = (data) => {
+    const errors = {};
+
+    if (!data.channel_name.trim()) {
+      errors.channel_name = "Informe o nome do canal ou grupo.";
+    }
+
+    const requiredFields = [
+      { field: "account_sid", label: "Account SID" },
+      { field: "api_key", label: "Auth Token" },
+      { field: "phone_number", label: "Número de envio" },
+      { field: "recipient_number", label: "Número do destinatário" },
+    ];
+
+    requiredFields.forEach(({ field, label }) => {
+      if (!data[field].trim()) {
+        errors[field] = `O campo ${label} é obrigatório.`;
+      }
+    });
+
+    const phoneFields = ["phone_number", "recipient_number"];
+    phoneFields.forEach((field) => {
+      const value = data[field].trim();
+      if (value && !value.startsWith("whatsapp:")) {
+        errors[field] = "O número deve começar com \"whatsapp:+\" seguido do DDI.";
+      }
+    });
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
+      if (!validateForm(formData)) {
+        return;
+      }
       await onSubmit(formData);
     } catch (error) {
       console.error("Erro ao salvar configuração:", error);
@@ -43,6 +79,12 @@ export default function WhatsAppConfigForm({ config, onSubmit, onCancel }) {
       ...prev,
       [field]: value
     }));
+    if (formErrors[field]) {
+      setFormErrors((prev) => ({
+        ...prev,
+        [field]: undefined,
+      }));
+    }
   };
 
   return (
@@ -67,6 +109,9 @@ export default function WhatsAppConfigForm({ config, onSubmit, onCancel }) {
               <div className="space-y-2">
                 <Label htmlFor="channel_name">Nome do Canal/Grupo *</Label>
                 <Input id="channel_name" value={formData.channel_name} onChange={(e) => handleInputChange('channel_name', e.target.value)} placeholder="Ex: Contabilidade Diária" required />
+                {formErrors.channel_name && (
+                  <p className="text-sm text-red-600">{formErrors.channel_name}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="wa-category">Categoria de Notícias</Label>
@@ -94,18 +139,30 @@ export default function WhatsAppConfigForm({ config, onSubmit, onCancel }) {
                 <div className="space-y-2">
                   <Label htmlFor="account_sid">Account SID *</Label>
                   <Input id="account_sid" value={formData.account_sid} onChange={(e) => handleInputChange('account_sid', e.target.value)} placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" required />
+                  {formErrors.account_sid && (
+                    <p className="text-sm text-red-600">{formErrors.account_sid}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="api_key">Auth Token *</Label>
                   <Input id="api_key" type="password" value={formData.api_key} onChange={(e) => handleInputChange('api_key', e.target.value)} placeholder="••••••••••••••••••••" required />
+                  {formErrors.api_key && (
+                    <p className="text-sm text-red-600">{formErrors.api_key}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone_number">Número de Envio (Twilio) *</Label>
                   <Input id="phone_number" value={formData.phone_number} onChange={(e) => handleInputChange('phone_number', e.target.value)} placeholder="whatsapp:+14155238886" required />
+                  {formErrors.phone_number && (
+                    <p className="text-sm text-red-600">{formErrors.phone_number}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="recipient_number">Número do Destinatário *</Label>
                   <Input id="recipient_number" value={formData.recipient_number} onChange={(e) => handleInputChange('recipient_number', e.target.value)} placeholder="whatsapp:+5511999999999" required />
+                  {formErrors.recipient_number && (
+                    <p className="text-sm text-red-600">{formErrors.recipient_number}</p>
+                  )}
                 </div>
               </div>
             </div>
