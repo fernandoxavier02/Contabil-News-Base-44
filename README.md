@@ -12,10 +12,12 @@ npm run preview # pré-visualiza a build
 npm run lint   # executa ESLint
 ```
 
-## Dados e integrações simuladas
+## Dados e integrações
 
-- O feed inicial traz exemplos de notícias para demonstração.
-- Fontes e canais possuem conjuntos padrão que podem ser redefinidos pelo menu da própria aplicação.
-- A aba "Diagnóstico IA" utiliza um agente local que gera respostas simuladas.
+- Nenhum dado mock é carregado por padrão; tudo começa vazio.
+- Configure `VITE_API_BASE_URL` (e opcionalmente `VITE_API_TOKEN`) no `.env.local`.
+- Se necessário, defina as variáveis `VITE_API_ROUTE_*` para customizar cada endpoint.
+- Ajuste `src/api/remoteApi.js` conforme seus serviços.
+- Siga os checklists em `docs/data-integration-plan.md` e acompanhe o progresso em `docs/checklist-progress.md`.
 
-Sinta-se à vontade para substituir os mocks por suas próprias APIs ou serviços.
+A aba "Diagnóstico IA" segue operando com respostas locais até que você direcione as chamadas para o seu backend.
