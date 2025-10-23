@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { RefreshCw, Loader2, CheckCircle } from "lucide-react";
 import { Source } from "@/api/entities";
 import { News } from "@/api/entities";
-import { invokeLLMWithRetry, safeCreateNews, generateNewsViaLLM } from "@/components/utils/integrationHelpers";
+import { safeCreateNews, generateNewsViaLLM } from "@/components/utils/integrationHelpers";
 import { fetchRealNews } from "@/api/functions";
 import {
   Dialog,

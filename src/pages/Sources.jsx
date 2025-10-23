@@ -1,11 +1,11 @@
-
+﻿
 import React, { useState, useEffect } from "react";
 import { Source } from "@/api/entities";
 import { News } from "@/api/entities";
 import { Button } from "@/components/ui/button";
 import { Plus, Globe, Settings, RefreshCw, AlertTriangle } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
-import { invokeLLMWithRetry, safeCreateNews, generateNewsViaLLM } from "@/components/utils/integrationHelpers";
+import { safeCreateNews, generateNewsViaLLM } from "@/components/utils/integrationHelpers";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,11 +16,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { base44 } from "@/api/base44Client"; // Corrected import path
+import { resetSources } from "@/api/functions"; // Reset local data to defaults
 
 import SourceCard from "../components/sources/SourceCard";
 import SourceForm from "../components/sources/SourceForm";
 import { fetchRealNews } from "@/api/functions";
+import appLogo from "@/assets/logo.svg";
 
 export default function SourcesPage() {
   const [sources, setSources] = useState([]);
@@ -102,11 +103,11 @@ export default function SourcesPage() {
                 rss_feed_url: source.rss_feed_url,
                 source_id: source.id,
                 source_name: source.name,
-                category: "geral" // Categoria genérica para teste
+                category: "geral" // Categoria genÃ©rica para teste
             });
 
             if (rssResult && rssResult.success) {
-                alert(`${rssResult.created_count || 0} notícias criadas a partir do RSS de ${source.name}!`);
+                alert(`${rssResult.created_count || 0} notÃ­cias criadas a partir do RSS de ${source.name}!`);
             } else {
                  throw new Error(rssResult?.error || "Falha ao buscar RSS.");
             }
@@ -117,11 +118,11 @@ export default function SourcesPage() {
             const selectedCategory = categories[Math.floor(Math.random() * categories.length)];
             
             const categoryPrompts = {
-                contabil: "notícias sobre normas contábeis, demonstrações financeiras, balanços, CPC, CFC",
-                fiscal: "notícias sobre legislação fiscal, impostos, declarações, DCTF, SPED, Receita Federal",
-                folha_pagamento: "notícias sobre eSocial, folha de pagamento, trabalhistas, INSS, FGTS",
-                tributaria: "notícias sobre direito tributário, jurisprudência tributária, STF, planejamento tributário",
-                reforma_tributaria: "notícias sobre reforma tributária brasileira, IBS, CBS, IS, PEC da reforma"
+                contabil: "notÃ­cias sobre normas contÃ¡beis, demonstraÃ§Ãµes financeiras, balanÃ§os, CPC, CFC",
+                fiscal: "notÃ­cias sobre legislaÃ§Ã£o fiscal, impostos, declaraÃ§Ãµes, DCTF, SPED, Receita Federal",
+                folha_pagamento: "notÃ­cias sobre eSocial, folha de pagamento, trabalhistas, INSS, FGTS",
+                tributaria: "notÃ­cias sobre direito tributÃ¡rio, jurisprudÃªncia tributÃ¡ria, STF, planejamento tributÃ¡rio",
+                reforma_tributaria: "notÃ­cias sobre reforma tributÃ¡ria brasileira, IBS, CBS, IS, PEC da reforma"
             };
 
             const newsData = await generateNewsViaLLM({
@@ -134,28 +135,28 @@ export default function SourcesPage() {
             });
 
             await safeCreateNews(newsData);
-            alert(`Nova notícia criada com sucesso via IA a partir de ${source.name}!`);
+            alert(`Nova notÃ­cia criada com sucesso via IA a partir de ${source.name}!`);
         }
 
     } catch (error) {
-      console.error("Erro ao buscar notícias:", error);
-      alert(`Erro ao buscar/criar notícia: ${error.message}`); 
+      console.error("Erro ao buscar notÃ­cias:", error);
+      alert(`Erro ao buscar/criar notÃ­cia: ${error.message}`); 
     } finally {
       setScrapingSourceId(null);
     }
   };
 
   const handleResetSources = async () => {
-    if (!confirm('⚠️ ATENÇÃO: Isso irá deletar TODAS as fontes atuais e criar novas fontes RSS brasileiras. Confirmar?')) {
+    if (!confirm('âš ï¸ ATENÃ‡ÃƒO: Isso irÃ¡ deletar TODAS as fontes atuais e criar novas fontes RSS brasileiras. Confirmar?')) {
       return;
     }
 
     setIsLoading(true);
     try {
-      const response = await base44.functions.invoke('resetSources');
+      const response = await resetSources();
       
       if (response.data.success) {
-        alert(`✅ ${response.data.message}`);
+        alert(`âœ… ${response.data.message}`);
         await loadSources();
       } else {
         throw new Error(response.data.error);
@@ -192,14 +193,14 @@ export default function SourcesPage() {
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68c5db916f9ead41fed23c03/dae9250f4_ForvisMazars-Logo-Color-RGB.png" 
-                  alt="Forvis Mazars Logo"
+                  src={appLogo} 
+                  alt="Contábil News"
                   className="h-16 object-contain brightness-0 invert"
                   onError={(e) => e.target.style.display = 'none'}
                 />
                 <div className="text-white">
                   <h1 className="text-3xl font-bold mb-2">Gerenciar Fontes</h1>
-                  <p className="text-white/80">Configure e gerencie as fontes de notícias</p>
+                  <p className="text-white/80">Configure e gerencie as fontes de notÃ­cias</p>
                 </div>
               </div>
               <div className="flex gap-3">
@@ -337,7 +338,7 @@ export default function SourcesPage() {
             <div className="text-center py-12 bg-white/85 backdrop-blur-xl rounded-xl shadow-lg border border-white">
               <Globe className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-500 mb-2">Nenhuma fonte cadastrada</h3>
-              <p className="text-gray-400 mb-6">Comece criando sua primeira fonte de notícias</p>
+              <p className="text-gray-400 mb-6">Comece criando sua primeira fonte de notÃ­cias</p>
               <Button 
                 onClick={() => setShowForm(true)}
                 className="bg-green-600 hover:bg-green-700"
@@ -353,10 +354,10 @@ export default function SourcesPage() {
             <AlertDialogHeader>
               <AlertDialogTitle className="flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-red-600" />
-                Confirmar Exclusão
+                Confirmar ExclusÃ£o
               </AlertDialogTitle>
               <AlertDialogDescription>
-                Tem certeza que deseja excluir esta fonte? Esta ação não pode ser desfeita.
+                Tem certeza que deseja excluir esta fonte? Esta aÃ§Ã£o nÃ£o pode ser desfeita.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -374,3 +375,5 @@ export default function SourcesPage() {
     </div>
   );
 }
+
+

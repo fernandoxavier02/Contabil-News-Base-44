@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Send, Loader2, AlertCircle, CheckCircle, XCircle } from "lucide-react";
 import { News } from "@/api/entities";
-import { base44 } from "@/api/base44Client";
+import { sendToTelegram } from "@/api/functions";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,7 +21,7 @@ export default function TelegramTestPanel({ configs = [] }) {
     setProgress(0);
 
     try {
-      console.log("🚀 Iniciando teste de envio de notícias...");
+      console.log("ðŸš€ Iniciando teste de envio de notÃ­cias...");
       
       const activeConfigs = configs.filter(c => c.is_active);
 
@@ -42,7 +42,7 @@ export default function TelegramTestPanel({ configs = [] }) {
       }
 
       const allNews = await News.list('-publication_date', 100);
-      console.log(`📰 ${allNews.length} notícias encontradas`);
+      console.log(`ðŸ“° ${allNews.length} notÃ­cias encontradas`);
       
       if (allNews.length === 0) {
         setResults({
@@ -53,7 +53,7 @@ export default function TelegramTestPanel({ configs = [] }) {
             channel: "Sistema",
             news: "N/A",
             status: "error",
-            error: "Não há notícias recentes para enviar. Gere/importe notícias primeiro."
+            error: "NÃ£o hÃ¡ notÃ­cias recentes para enviar. Gere/importe notÃ­cias primeiro."
           }]
         });
         setIsSending(false);
@@ -71,13 +71,13 @@ export default function TelegramTestPanel({ configs = [] }) {
       let processedConfigs = 0;
 
       for (const config of activeConfigs) {
-        console.log(`\n📡 Processando canal: ${config.channel_name || config.channel_id}`);
+        console.log(`\nðŸ“¡ Processando canal: ${config.channel_name || config.channel_id}`);
         
         const newsForChannel = config.category === 'geral' 
           ? allNews 
           : allNews.filter(n => n.category === config.category);
 
-        console.log(`   📊 Notícias na categoria: ${newsForChannel.length}`);
+        console.log(`   ðŸ“Š NotÃ­cias na categoria: ${newsForChannel.length}`);
 
         const importanceOrder = { baixa: 1, media: 2, alta: 3 };
         const minImportance = importanceOrder[config.min_importance || 'media'];
@@ -86,7 +86,7 @@ export default function TelegramTestPanel({ configs = [] }) {
           importanceOrder[n.importance || 'media'] >= minImportance
         );
 
-        console.log(`   ⭐ Notícias após filtro de importância: ${filteredNews.length}`);
+        console.log(`   â­ NotÃ­cias apÃ³s filtro de importÃ¢ncia: ${filteredNews.length}`);
 
         const newsItemToTest = filteredNews.length > 0 ? filteredNews[0] : null;
 
@@ -97,7 +97,7 @@ export default function TelegramTestPanel({ configs = [] }) {
             channel: config.channel_name || config.channel_id,
             news: "N/A",
             status: "error",
-            error: "Sem notícias compatíveis para este canal (verifique categoria e importância)"
+            error: "Sem notÃ­cias compatÃ­veis para este canal (verifique categoria e importÃ¢ncia)"
           });
           processedConfigs++;
           setProgress((processedConfigs / totalActiveConfigs) * 100);
@@ -107,15 +107,15 @@ export default function TelegramTestPanel({ configs = [] }) {
         res.total++;
           
         try {
-          console.log(`      🔄 Enviando: ${newsItemToTest.title}`);
+          console.log(`      ðŸ”„ Enviando: ${newsItemToTest.title}`);
           
-          const response = await base44.functions.invoke('sendToTelegram', {
+          const response = await sendToTelegram({
             news: newsItemToTest,
             telegramConfig: config,
             useAiTriage
           });
 
-          console.log(`      📥 Resposta:`, response.data);
+          console.log(`      ðŸ“¥ Resposta:`, response.data);
 
           if (response.data && response.data.success) {
             res.sent++;
@@ -125,7 +125,7 @@ export default function TelegramTestPanel({ configs = [] }) {
               status: 'sent',
               aiAnalysis: response.data.aiAnalysis
             });
-            console.log(`      ✅ SUCESSO`);
+            console.log(`      âœ… SUCESSO`);
           } else {
             res.errors++;
             let errorMessage = response.data?.error || response.data?.message || "Erro desconhecido";
@@ -136,11 +136,11 @@ export default function TelegramTestPanel({ configs = [] }) {
               status: 'error',
               error: errorMessage
             });
-            console.log(`      ⚠️ FALHA`);
+            console.log(`      âš ï¸ FALHA`);
           }
         } catch (error) {
           res.errors++;
-          console.error(`      ❌ ERRO:`, error);
+          console.error(`      âŒ ERRO:`, error);
           
           let errorMessage = "Erro desconhecido";
           
@@ -166,11 +166,11 @@ export default function TelegramTestPanel({ configs = [] }) {
         setProgress((processedConfigs / totalActiveConfigs) * 100);
       }
 
-      console.log("\n📊 Resultado final:", res);
+      console.log("\nðŸ“Š Resultado final:", res);
       setResults(res);
 
     } catch (error) {
-      console.error("💥 Erro geral:", error);
+      console.error("ðŸ’¥ Erro geral:", error);
       
       setResults({
         total: 0,
@@ -201,11 +201,11 @@ export default function TelegramTestPanel({ configs = [] }) {
         <Alert className="bg-amber-50 border-amber-200">
           <AlertCircle className="w-4 h-4 text-amber-600" />
           <AlertDescription className="text-sm text-amber-900">
-            <strong>⚠️ Antes de testar:</strong> Certifique-se que:
+            <strong>âš ï¸ Antes de testar:</strong> Certifique-se que:
             <ul className="list-disc list-inside mt-1 ml-2">
               <li>O bot foi adicionado como <strong>ADMINISTRADOR</strong> no canal/grupo</li>
-              <li>O bot tem permissão para <strong>enviar mensagens</strong></li>
-              <li>Se usar tópico: o <strong>ID do tópico está correto</strong> (use @userinfobot)</li>
+              <li>O bot tem permissÃ£o para <strong>enviar mensagens</strong></li>
+              <li>Se usar tÃ³pico: o <strong>ID do tÃ³pico estÃ¡ correto</strong> (use @userinfobot)</li>
             </ul>
           </AlertDescription>
         </Alert>
@@ -247,7 +247,7 @@ export default function TelegramTestPanel({ configs = [] }) {
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
-                <span className="text-sm font-medium text-gray-700">Processando canais e notícias...</span>
+                <span className="text-sm font-medium text-gray-700">Processando canais e notÃ­cias...</span>
               </div>
               <Progress value={progress} className="h-2" />
             </div>
@@ -257,7 +257,7 @@ export default function TelegramTestPanel({ configs = [] }) {
         {results && !isSending && (
           <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
             <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              📊 Resultado do Envio:
+              ðŸ“Š Resultado do Envio:
             </h4>
             
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
@@ -267,11 +267,11 @@ export default function TelegramTestPanel({ configs = [] }) {
               </div>
               <div className="text-center p-3 bg-green-50 rounded-lg border border-green-200">
                 <div className="text-3xl font-bold text-green-600">{results.sent}</div>
-                <div className="text-xs text-gray-500 mt-1">Enviadas ✅</div>
+                <div className="text-xs text-gray-500 mt-1">Enviadas âœ…</div>
               </div>
               <div className="text-center p-3 bg-red-50 rounded-lg border border-red-200">
                 <div className="text-3xl font-bold text-red-600">{results.errors}</div>
-                <div className="text-xs text-gray-500 mt-1">Erros ❌</div>
+                <div className="text-xs text-gray-500 mt-1">Erros âŒ</div>
               </div>
             </div>
 
@@ -288,7 +288,7 @@ export default function TelegramTestPanel({ configs = [] }) {
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1">
                         <div className="font-medium text-gray-900 text-sm">{detail.channel}</div>
-                        <div className="text-xs text-gray-600 mt-1">📰 {detail.news}</div>
+                        <div className="text-xs text-gray-600 mt-1">ðŸ“° {detail.news}</div>
                         {detail.error && (
                           <div className="text-xs mt-2 p-2 bg-white rounded border border-red-200">
                             <pre className="whitespace-pre-wrap font-mono text-red-700">{detail.error}</pre>
@@ -307,7 +307,7 @@ export default function TelegramTestPanel({ configs = [] }) {
               </div>
             ) : (
               <div className="text-center py-8 text-gray-500">
-                Nenhum detalhe disponível
+                Nenhum detalhe disponÃ­vel
               </div>
             )}
           </div>

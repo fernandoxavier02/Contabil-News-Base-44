@@ -1,4 +1,4 @@
-
+﻿
 import React, { useState, useEffect, useCallback } from "react";
 import { TelegramConfig } from "@/api/entities";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import TelegramConfigCard from "../components/telegram/TelegramConfigCard";
 import TelegramConfigForm from "../components/telegram/TelegramConfigForm";
 import TelegramTestPanel from "../components/telegram/TelegramTestPanel";
+import appLogo from "@/assets/logo.svg";
 
 export default function TelegramSettingsPage() {
   const [configs, setConfigs] = useState([]);
@@ -21,7 +22,7 @@ export default function TelegramSettingsPage() {
       const data = await TelegramConfig.list('-created_date');
       setConfigs(data);
     } catch (error) {
-      console.error("Erro ao carregar configurações:", error);
+      console.error("Erro ao carregar configuraÃ§Ãµes:", error);
     }
     setIsLoading(false);
   }, []);
@@ -41,8 +42,8 @@ export default function TelegramSettingsPage() {
       setEditingConfig(null);
       loadConfigs();
     } catch (error) {
-      console.error("Erro ao salvar configuração:", error);
-      alert("Ocorreu um erro ao salvar a configuração. Verifique o console.");
+      console.error("Erro ao salvar configuraÃ§Ã£o:", error);
+      alert("Ocorreu um erro ao salvar a configuraÃ§Ã£o. Verifique o console.");
     }
   };
 
@@ -52,12 +53,12 @@ export default function TelegramSettingsPage() {
   };
 
   const handleDelete = async (configId) => {
-    if (confirm("Tem certeza que deseja excluir esta configuração?")) {
+    if (confirm("Tem certeza que deseja excluir esta configuraÃ§Ã£o?")) {
       try {
         await TelegramConfig.delete(configId);
         loadConfigs();
       } catch (error) {
-        console.error("Erro ao excluir configuração:", error);
+        console.error("Erro ao excluir configuraÃ§Ã£o:", error);
       }
     }
   };
@@ -95,14 +96,14 @@ export default function TelegramSettingsPage() {
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68c5db916f9ead41fed23c03/dae9250f4_ForvisMazars-Logo-Color-RGB.png" 
-                  alt="Forvis Mazars Logo"
+                  src={appLogo} 
+                  alt="Contábil News"
                   className="h-16 object-contain brightness-0 invert"
                   onError={(e) => e.target.style.display = 'none'}
                 />
                 <div className="text-white">
-                  <h1 className="text-3xl font-bold mb-2">Integração com Telegram</h1>
-                  <p className="text-white/80">Configure canais e automação com IA</p>
+                  <h1 className="text-3xl font-bold mb-2">IntegraÃ§Ã£o com Telegram</h1>
+                  <p className="text-white/80">Configure canais e automaÃ§Ã£o com IA</p>
                 </div>
               </div>
               <Button 
@@ -118,20 +119,20 @@ export default function TelegramSettingsPage() {
             </div>
           </div>
 
-          {/* Instruções */}
+          {/* InstruÃ§Ãµes */}
           <div className="bg-blue-100/80 backdrop-blur-lg border border-blue-300 rounded-xl p-6 mb-8">
             <h3 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
               <SettingsIcon className="w-5 h-5" />
-              Como configurar com tópicos:
+              Como configurar com tÃ³picos:
             </h3>
             <ol className="text-sm text-blue-800 space-y-2 list-decimal list-inside">
-              <li>Crie um bot no Telegram através do @BotFather</li>
+              <li>Crie um bot no Telegram atravÃ©s do @BotFather</li>
               <li>Copie o token do bot fornecido</li>
-              <li>Crie tópicos no seu grupo (Menu → Tópicos → Criar Tópico)</li>
+              <li>Crie tÃ³picos no seu grupo (Menu â†’ TÃ³picos â†’ Criar TÃ³pico)</li>
               <li>Adicione o bot como administrador do grupo</li>
-              <li>Para obter o ID do tópico: envie uma mensagem no tópico e encaminhe para @userinfobot</li>
-              <li>Configure aqui: use o mesmo channel_id para o grupo, mas diferentes message_thread_id para cada tópico</li>
-              <li>Cada categoria pode ir para um tópico diferente automaticamente!</li>
+              <li>Para obter o ID do tÃ³pico: envie uma mensagem no tÃ³pico e encaminhe para @userinfobot</li>
+              <li>Configure aqui: use o mesmo channel_id para o grupo, mas diferentes message_thread_id para cada tÃ³pico</li>
+              <li>Cada categoria pode ir para um tÃ³pico diferente automaticamente!</li>
             </ol>
           </div>
 
@@ -189,7 +190,7 @@ export default function TelegramSettingsPage() {
                   <h3 className="text-2xl font-bold text-gray-900">
                     {configs.filter(c => c.send_automatically).length}
                   </h3>
-                  <p className="text-gray-500 text-sm">Envio Automático</p>
+                  <p className="text-gray-500 text-sm">Envio AutomÃ¡tico</p>
                 </div>
               </div>
             </div>
@@ -250,7 +251,7 @@ export default function TelegramSettingsPage() {
             <div className="text-center py-12">
               <Send className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-500 mb-2">Nenhum canal configurado</h3>
-              <p className="text-gray-400 mb-6">Comece criando sua primeira configuração de canal</p>
+              <p className="text-gray-400 mb-6">Comece criando sua primeira configuraÃ§Ã£o de canal</p>
               <Button
                 onClick={() => {
                   setEditingConfig(null);

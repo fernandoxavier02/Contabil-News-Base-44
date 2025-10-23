@@ -1,6 +1,4 @@
-
-
-import React from "react";
+﻿import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Newspaper, Globe, Send, Calculator, FileText, CreditCard, Gavel, RefreshCw, TrendingUp, Stethoscope } from "lucide-react";
@@ -17,6 +15,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import appLogo from "@/assets/logo.svg";
 
 const navigationItems = [
   {
@@ -30,12 +29,12 @@ const navigationItems = [
     icon: Globe,
   },
   {
-    title: "Canais de Distribuição", // Changed from "Telegram"
+    title: "Canais de DistribuiÃ§Ã£o", // Changed from "Telegram"
     url: createPageUrl("ChannelSettings"), // Changed from "TelegramSettings"
     icon: Send,
   },
   {
-    title: "Diagnóstico IA",
+    title: "DiagnÃ³stico IA",
     url: createPageUrl("CodeDoctor"),
     icon: Stethoscope,
   },
@@ -43,7 +42,7 @@ const navigationItems = [
 
 const categoryItems = [
   {
-    title: "Contábil",
+    title: "ContÃ¡bil",
     category: "contabil",
     icon: Calculator,
   },
@@ -58,12 +57,12 @@ const categoryItems = [
     icon: CreditCard,
   },
   {
-    title: "Tributária",
+    title: "TributÃ¡ria",
     category: "tributaria",
     icon: Gavel,
   },
   {
-    title: "Reforma Tributária",
+    title: "Reforma TributÃ¡ria",
     category: "reforma_tributaria",
     icon: RefreshCw,
   },
@@ -86,18 +85,18 @@ export default function Layout({ children, currentPageName }) {
     <SidebarProvider>
       <style>{`
         :root {
-          --forvis-navy: #002855;
-          --forvis-blue: #0066B3;
-          --forvis-coral: #E94D3D;
-          --forvis-gray: #58595B;
-          --forvis-light-gray: #F5F5F5;
+          --brand-navy: #002855;
+          --brand-blue: #0066B3;
+          --brand-coral: #E94D3D;
+          --brand-gray: #58595B;
+          --brand-light-gray: #F5F5F5;
         }
 
         body {
           font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
-        /* Forçar contraste no sidebar */
+        /* ForÃ§ar contraste no sidebar */
         [data-sidebar] {
           background: linear-gradient(180deg, #002855 0%, #003875 100%) !important;
         }
@@ -120,8 +119,8 @@ export default function Layout({ children, currentPageName }) {
           }}>
             <div className="flex items-center justify-center bg-white rounded-xl p-4 shadow-lg">
               <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68c5db916f9ead41fed23c03/dae9250f4_ForvisMazars-Logo-Color-RGB.png"
-                alt="Forvis Mazars"
+                src={appLogo}
+                alt="Contábil News"
                 className="h-16 object-contain"
                 onError={(e) => {
                   console.error('Erro ao carregar logo do sidebar:', e);
@@ -138,7 +137,7 @@ export default function Layout({ children, currentPageName }) {
               <SidebarGroupLabel className="text-xs font-bold uppercase tracking-wider px-3 py-3 mb-2" style={{
                 color: 'rgba(255, 255, 255, 0.7)'
               }}>
-                Navegação Principal
+                NavegaÃ§Ã£o Principal
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
@@ -212,11 +211,11 @@ export default function Layout({ children, currentPageName }) {
             <div className="flex items-center gap-4">
               <SidebarTrigger className="hover:bg-gray-100 p-2 rounded-lg transition-colors duration-200" />
               <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68c5db916f9ead41fed23c03/dae9250f4_ForvisMazars-Logo-Color-RGB.png"
-                alt="Forvis Mazars"
+                src={appLogo}
+                alt="Contábil News"
                 className="h-8 object-contain"
                 onError={(e) => {
-                  console.error('Erro ao carregar logo do cabeçalho móvel:', e);
+                  console.error('Erro ao carregar logo do cabeÃ§alho mÃ³vel:', e);
                   e.target.style.display = 'none';
                 }}
               />
@@ -228,11 +227,12 @@ export default function Layout({ children, currentPageName }) {
           </div>
 
           <footer className="bg-[#002855] text-white py-4 px-6 text-center text-sm">
-            <p className="opacity-80">© 2025 Forvis Mazars - Avisos Contábeis | Todos os direitos reservados</p>
+            <p className="opacity-80">Â© 2025 Contábil News - Avisos ContÃ¡beis | Todos os direitos reservados</p>
           </footer>
         </main>
       </div>
     </SidebarProvider>
   );
 }
+
 

@@ -1,19 +1,15 @@
-import { base44 } from './base44Client';
+import { localAuth, localDb } from "./localDatabase";
 
+export const News = localDb.News;
 
-export const News = base44.entities.News;
+export const Source = localDb.Source;
 
-export const Source = base44.entities.Source;
+export const TelegramConfig = localDb.TelegramConfig;
 
-export const TelegramConfig = base44.entities.TelegramConfig;
+export const WhatsAppConfig = localDb.WhatsAppConfig;
 
-export const WhatsAppConfig = base44.entities.WhatsAppConfig;
+export const TeamsConfig = localDb.TeamsConfig;
 
-export const TeamsConfig = base44.entities.TeamsConfig;
+export const EmailConfig = localDb.EmailConfig;
 
-export const EmailConfig = base44.entities.EmailConfig;
-
-
-
-// auth sdk:
-export const User = base44.auth;
+export const User = localAuth;

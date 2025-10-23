@@ -1,20 +1,21 @@
-# Base44 App
+﻿# Contábil News (modo local)
 
+Aplicação React construída com Vite e Tailwind adaptada para funcionar de forma independente, utilizando armazenamento local do navegador em vez das integrações da plataforma Base44. Todas as entidades (notícias, fontes e canais) são persistidas em localStorage, permitindo que você personalize o fluxo sem depender de serviços externos.
 
-This app was created automatically by Base44.
-It's a Vite+React app that communicates with the Base44 API.
+## Scripts disponíveis
 
-## Running the app
-
-```bash
-npm install
-npm run dev
+```
+npm install    # instala dependências
+npm run dev    # inicia o servidor de desenvolvimento
+npm run build  # gera build de produção
+npm run preview # pré-visualiza a build
+npm run lint   # executa ESLint
 ```
 
-## Building the app
+## Dados e integrações simuladas
 
-```bash
-npm run build
-```
+- O feed inicial traz exemplos de notícias para demonstração.
+- Fontes e canais possuem conjuntos padrão que podem ser redefinidos pelo menu da própria aplicação.
+- A aba "Diagnóstico IA" utiliza um agente local que gera respostas simuladas.
 
-For more information and support, please contact Base44 support at app@base44.com.
+Sinta-se à vontade para substituir os mocks por suas próprias APIs ou serviços.

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+﻿import React, { useState, useEffect, useCallback } from "react";
 import { News } from "@/api/entities";
 import { Source } from "@/api/entities";
 import { TrendingUp, Star, Newspaper, Download, Clock, Trash2, Loader2 } from "lucide-react";
@@ -17,13 +17,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { base44 } from "@/api/base44Client";
+import { clearAllNews } from "@/api/functions";
 
 import NewsCard from "../components/news/NewsCard";
 import NewsFilters from "../components/news/NewsFilters";
 import NewsModal from "../components/news/NewsModal";
 import NewsUpdateButton from "../components/news/NewsUpdateButton";
 import WhatsAppFeedGenerator from "../components/news/WhatsAppFeedGenerator";
+import appLogo from "@/assets/logo.svg";
 
 export default function FeedPage() {
   const [news, setNews] = useState([]);
@@ -44,7 +45,7 @@ export default function FeedPage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const loadData = useCallback(async () => {
-    console.log("[pages/Feed.js] 📥 Carregando notícias...");
+    console.log("[pages/Feed.js] ðŸ“¥ Carregando notÃ­cias...");
     setIsLoading(true);
     
     try {
@@ -53,7 +54,7 @@ export default function FeedPage() {
         Source.list()
       ]);
       
-      console.log(`[pages/Feed.js] ✅ ${newsData.length} notícias carregadas`);
+      console.log(`[pages/Feed.js] âœ… ${newsData.length} notÃ­cias carregadas`);
       
       setNews(newsData);
       setSources(sourcesData);
@@ -63,23 +64,23 @@ export default function FeedPage() {
       setLastUpdateTime(new Date());
       
     } catch (error) {
-      console.error("[pages/Feed.js] ❌ Erro ao carregar dados:", error);
+      console.error("[pages/Feed.js] âŒ Erro ao carregar dados:", error);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   const handleNewsUpdated = useCallback((createdNewsList) => {
-    console.log(`[pages/Feed.js] 🎉 Recebidas ${createdNewsList.length} notícias novas para adicionar!`);
+    console.log(`[pages/Feed.js] ðŸŽ‰ Recebidas ${createdNewsList.length} notÃ­cias novas para adicionar!`);
     
     if (!createdNewsList || createdNewsList.length === 0) {
-      console.warn("[pages/Feed.js] ⚠️ Nenhuma notícia nova recebida");
+      console.warn("[pages/Feed.js] âš ï¸ Nenhuma notÃ­cia nova recebida");
       return;
     }
     
     setNews(prevNews => {
       const updatedNews = [...createdNewsList, ...prevNews];
-      console.log(`[pages/Feed.js] ✅ Estado atualizado: ${prevNews.length} → ${updatedNews.length} notícias`);
+      console.log(`[pages/Feed.js] âœ… Estado atualizado: ${prevNews.length} â†’ ${updatedNews.length} notÃ­cias`);
       return updatedNews;
     });
     
@@ -92,7 +93,7 @@ export default function FeedPage() {
     setLastUpdateTime(new Date());
     setFilterTrigger(prev => prev + 1);
     
-    console.log("[pages/Feed.js] 🎊 Notícias adicionadas com sucesso ao feed!");
+    console.log("[pages/Feed.js] ðŸŽŠ NotÃ­cias adicionadas com sucesso ao feed!");
   }, []);
 
   useEffect(() => {
@@ -115,7 +116,7 @@ export default function FeedPage() {
   }, [refreshInterval, loadData]);
 
   useEffect(() => {
-    console.log(`[pages/Feed.js] 🔄 Recalculando filtros. Total de notícias: ${news.length}, Trigger: ${filterTrigger}`);
+    console.log(`[pages/Feed.js] ðŸ”„ Recalculando filtros. Total de notÃ­cias: ${news.length}, Trigger: ${filterTrigger}`);
     
     let filtered = [...news];
     
@@ -149,7 +150,7 @@ export default function FeedPage() {
       return new Date(b.publication_date) - new Date(a.publication_date);
     });
     
-    console.log(`[pages/Feed.js] ✅ Notícias filtradas: ${filtered.length}`);
+    console.log(`[pages/Feed.js] âœ… NotÃ­cias filtradas: ${filtered.length}`);
     setFilteredNews(filtered);
   }, [news, searchTerm, selectedCategory, selectedImportance, selectedTags, filterTrigger]);
 
@@ -177,29 +178,26 @@ export default function FeedPage() {
   const handleDeleteAllNews = async () => {
     setIsDeleting(true);
     try {
-      console.log("🗑️ Chamando função para limpar feed...");
-      
-      const response = await base44.functions.invoke('clearAllNews');
-      
-      if (response.data.success) {
-        console.log(`✅ ${response.data.deleted_count} notícias deletadas`);
-        alert(response.data.message);
-        
-        // Recarregar dados
+      console.log("[Feed] Iniciando limpeza completa do feed...");
+      const response = await clearAllNews();
+      const result = response?.data;
+
+      if (result?.success) {
+        console.log(`[Feed] ${result.deleted_count} notícia(s) removidas do armazenamento local.`);
+        alert(result.message);
+
         await loadData();
         setShowDeleteConfirm(false);
       } else {
-        throw new Error(response.data.error || 'Erro desconhecido');
+        throw new Error(result?.error ?? "Não foi possível remover as notícias.");
       }
-      
     } catch (error) {
-      console.error("❌ Erro ao deletar notícias:", error);
+      console.error("[Feed] Erro ao deletar notícias:", error);
       alert(`Erro ao deletar notícias: ${error.message}`);
     } finally {
       setIsDeleting(false);
     }
   };
-
   const getSourceForNews = (newsItem) => {
     return sources.find(source => source.id === newsItem.source_id);
   };
@@ -227,19 +225,19 @@ export default function FeedPage() {
             <div className="text-center mb-8 bg-white rounded-2xl shadow-2xl p-8 border-4 border-[#0066B3]">
               <div className="flex items-center justify-center mb-6">
                 <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68c5db916f9ead41fed23c03/dae9250f2_ForvisMazars-Logo-Color-RGB.png" 
-                  alt="Forvis Mazars Logo"
+                  src={appLogo} 
+                  alt="Contábil News"
                   className="h-20 object-contain"
                   onError={(e) => e.target.style.display = 'none'}
                 />
               </div>
-              <h1 className="text-4xl font-bold text-[#002855] mb-3">Avisos Contábeis</h1>
+              <h1 className="text-4xl font-bold text-[#002855] mb-3">Avisos ContÃ¡beis</h1>
               <p className="text-lg text-[#58595B] max-w-2xl mx-auto leading-relaxed">
-                Mantenha-se atualizado com as últimas notícias contábeis, fiscais e tributárias do Brasil
+                Mantenha-se atualizado com as Ãºltimas notÃ­cias contÃ¡beis, fiscais e tributÃ¡rias do Brasil
               </p>
               {lastUpdateTime && (
                 <div className="mt-4 text-sm">
-                  <span className="text-gray-500">Última atualização: </span>
+                  <span className="text-gray-500">Ãšltima atualizaÃ§Ã£o: </span>
                   <span className="font-semibold text-[#0066B3]">
                     {format(lastUpdateTime, 'dd/MM/yyyy HH:mm:ss')}
                   </span>
@@ -306,7 +304,7 @@ export default function FeedPage() {
               <div className="mb-12">
                 <div className="flex items-center gap-2 mb-6 bg-white rounded-lg px-4 py-3 shadow-md border border-gray-200">
                   <Star className="w-5 h-5 text-[#E94D3D]" />
-                  <h2 className="text-2xl font-bold text-[#002855]">Notícias em Destaque</h2>
+                  <h2 className="text-2xl font-bold text-[#002855]">NotÃ­cias em Destaque</h2>
                 </div>
                 <div className="grid gap-6">
                   {highlightedNews.map((newsItem) => (
@@ -326,10 +324,10 @@ export default function FeedPage() {
               <div className="flex items-center gap-2 mb-6 bg-white rounded-lg px-4 py-3 shadow-md border border-gray-200">
                 <Newspaper className="w-5 h-5 text-[#0066B3]" />
                 <h2 className="text-2xl font-bold text-[#002855]">
-                  {selectedCategory ? `Notícias - ${selectedCategory.replace(/_/g, ' ')}` : 'Todas as Notícias'}
+                  {selectedCategory ? `NotÃ­cias - ${selectedCategory.replace(/_/g, ' ')}` : 'Todas as NotÃ­cias'}
                 </h2>
                 <span className="text-sm text-white bg-[#0066B3] px-3 py-1 rounded-full font-semibold">
-                  {filteredNews.length} {filteredNews.length === 1 ? 'notícia' : 'notícias'}
+                  {filteredNews.length} {filteredNews.length === 1 ? 'notÃ­cia' : 'notÃ­cias'}
                 </span>
               </div>
             </div>
@@ -352,10 +350,10 @@ export default function FeedPage() {
                 className="text-center py-12 bg-white rounded-xl shadow-lg border border-gray-200"
               >
                 <Newspaper className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-[#58595B] mb-2">Nenhuma notícia encontrada</h3>
+                <h3 className="text-xl font-semibold text-[#58595B] mb-2">Nenhuma notÃ­cia encontrada</h3>
                 <p className="text-gray-400 mb-4">
                   {news.length === 0 
-                    ? "Clique em 'Atualizar Notícias' para buscar novas notícias" 
+                    ? "Clique em 'Atualizar NotÃ­cias' para buscar novas notÃ­cias" 
                     : "Tente ajustar seus filtros para ver mais resultados"}
                 </p>
                 <Button 
@@ -396,11 +394,11 @@ export default function FeedPage() {
       <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-red-600">⚠️ Confirmar exclusão de TODAS as notícias</AlertDialogTitle>
+            <AlertDialogTitle className="text-red-600">âš ï¸ Confirmar exclusÃ£o de TODAS as notÃ­cias</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação irá deletar permanentemente <strong>{news.length} notícias</strong> do feed.
+              Esta aÃ§Ã£o irÃ¡ deletar permanentemente <strong>{news.length} notÃ­cias</strong> do feed.
               <br /><br />
-              <strong className="text-red-600">Esta ação não pode ser desfeita!</strong>
+              <strong className="text-red-600">Esta aÃ§Ã£o nÃ£o pode ser desfeita!</strong>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -425,3 +423,5 @@ export default function FeedPage() {
     </div>
   );
 }
+
+

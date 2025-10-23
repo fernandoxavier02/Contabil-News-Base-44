@@ -1,4 +1,4 @@
-
+﻿
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -10,29 +10,29 @@ import { format, subDays, subWeeks, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 const categoryEmojis = {
-  contabil: "📊",
-  fiscal: "📋", 
-  folha_pagamento: "💰",
-  tributaria: "⚖️",
-  reforma_tributaria: "🔄",
-  ifrs: "🌍",
-  usgaap: "🇺🇸"
+  contabil: "ðŸ“Š",
+  fiscal: "ðŸ“‹", 
+  folha_pagamento: "ðŸ’°",
+  tributaria: "âš–ï¸",
+  reforma_tributaria: "ðŸ”„",
+  ifrs: "ðŸŒ",
+  usgaap: "ðŸ‡ºðŸ‡¸"
 };
 
 const categoryLabels = {
-  contabil: "Contábil",
+  contabil: "ContÃ¡bil",
   fiscal: "Fiscal",
   folha_pagamento: "Folha de Pagamento",
-  tributaria: "Tributária", 
-  reforma_tributaria: "Reforma Tributária",
+  tributaria: "TributÃ¡ria", 
+  reforma_tributaria: "Reforma TributÃ¡ria",
   ifrs: "IFRS",
   usgaap: "US GAAP"
 };
 
 const importanceEmojis = {
-  alta: "🔥",
-  media: "⚠️",
-  baixa: "ℹ️"
+  alta: "ðŸ”¥",
+  media: "âš ï¸",
+  baixa: "â„¹ï¸"
 };
 
 export default function WhatsAppFeedGenerator({ allNews = [] }) {
@@ -42,22 +42,22 @@ export default function WhatsAppFeedGenerator({ allNews = [] }) {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const periodOptions = [
-    { value: "today", label: "📅 Hoje" },
-    { value: "yesterday", label: "📅 Ontem" },
-    { value: "2days", label: "📅 Últimos 2 dias" },
-    { value: "3days", label: "📅 Últimos 3 dias" },
-    { value: "5days", label: "📅 Últimos 5 dias" },
-    { value: "week", label: "📆 Última semana (7 dias)" },
-    { value: "10days", label: "📆 Últimos 10 dias" },
-    { value: "15days", label: "📆 Últimos 15 dias" },
-    { value: "3weeks", label: "📆 Últimas 3 semanas" },
-    { value: "month", label: "🗓️ Último mês (30 dias)" },
-    { value: "45days", label: "🗓️ Últimos 45 dias" },
-    { value: "2months", label: "🗓️ Últimos 2 meses" },
-    { value: "3months", label: "🗓️ Últimos 3 meses" },
-    { value: "6months", label: "🗓️ Últimos 6 meses" },
-    { value: "year", label: "📅 Último ano" },
-    { value: "all", label: "🌐 Todas as notícias" }
+    { value: "today", label: "ðŸ“… Hoje" },
+    { value: "yesterday", label: "ðŸ“… Ontem" },
+    { value: "2days", label: "ðŸ“… Ãšltimos 2 dias" },
+    { value: "3days", label: "ðŸ“… Ãšltimos 3 dias" },
+    { value: "5days", label: "ðŸ“… Ãšltimos 5 dias" },
+    { value: "week", label: "ðŸ“† Ãšltima semana (7 dias)" },
+    { value: "10days", label: "ðŸ“† Ãšltimos 10 dias" },
+    { value: "15days", label: "ðŸ“† Ãšltimos 15 dias" },
+    { value: "3weeks", label: "ðŸ“† Ãšltimas 3 semanas" },
+    { value: "month", label: "ðŸ—“ï¸ Ãšltimo mÃªs (30 dias)" },
+    { value: "45days", label: "ðŸ—“ï¸ Ãšltimos 45 dias" },
+    { value: "2months", label: "ðŸ—“ï¸ Ãšltimos 2 meses" },
+    { value: "3months", label: "ðŸ—“ï¸ Ãšltimos 3 meses" },
+    { value: "6months", label: "ðŸ—“ï¸ Ãšltimos 6 meses" },
+    { value: "year", label: "ðŸ“… Ãšltimo ano" },
+    { value: "all", label: "ðŸŒ Todas as notÃ­cias" }
   ];
 
   const getDateFilter = (period) => {
@@ -105,7 +105,7 @@ export default function WhatsAppFeedGenerator({ allNews = [] }) {
     try {
       let filteredNews = [...allNews];
       
-      // Filtrar por período
+      // Filtrar por perÃ­odo
       const dateFilter = getDateFilter(period);
       if (dateFilter && period !== "all") {
         filteredNews = filteredNews.filter(news => {
@@ -115,7 +115,7 @@ export default function WhatsAppFeedGenerator({ allNews = [] }) {
         });
       }
 
-      // Organizar por importância e data
+      // Organizar por importÃ¢ncia e data
       filteredNews.sort((a, b) => {
         const importanceOrder = { alta: 3, media: 2, baixa: 1 };
         const aImp = importanceOrder[a.importance] || 2;
@@ -129,107 +129,107 @@ export default function WhatsAppFeedGenerator({ allNews = [] }) {
       const mediumImportance = filteredNews.filter(n => n.importance === 'media');
       const lowImportance = filteredNews.filter(n => n.importance === 'baixa');
 
-      // Gerar cabeçalho
-      let feed = `📰 *FORVIS MAZARS - AVISOS CONTÁBEIS* 📰\n`;
-      feed += `📅 ${format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}\n\n`;
+      // Gerar cabeÃ§alho
+      let feed = `ðŸ“° *Contábil News - AVISOS CONTÃBEIS* ðŸ“°\n`;
+      feed += `ðŸ“… ${format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}\n\n`;
       
       if (period !== "today") {
         const periodLabel = periodOptions.find(p => p.value === period)?.label || "";
-        feed += `🗓️ *Período:* ${periodLabel}\n`;
+        feed += `ðŸ—“ï¸ *PerÃ­odo:* ${periodLabel}\n`;
         
-        // Adicionar range de datas quando aplicável
+        // Adicionar range de datas quando aplicÃ¡vel
         if (dateFilter) {
           const dateFrom = format(dateFilter, "dd/MM/yyyy", { locale: ptBR });
           const dateTo = format(new Date(), "dd/MM/yyyy", { locale: ptBR });
-          feed += `📊 *De:* ${dateFrom} *até:* ${dateTo}\n`;
+          feed += `ðŸ“Š *De:* ${dateFrom} *atÃ©:* ${dateTo}\n`;
         }
         feed += `\n`;
       }
 
       const totalNews = filteredNews.length;
       if (totalNews === 0) {
-        feed += `ℹ️ Nenhuma notícia encontrada para o período selecionado.\n\n`;
+        feed += `â„¹ï¸ Nenhuma notÃ­cia encontrada para o perÃ­odo selecionado.\n\n`;
         setGeneratedFeed(feed);
         setIsGenerating(false);
         return;
       }
 
-      feed += `📊 *Total de notícias:* ${totalNews}\n`;
-      feed += `   🔥 Alta: ${highImportance.length} | ⚠️ Média: ${mediumImportance.length} | ℹ️ Outras: ${lowImportance.length}\n\n`;
+      feed += `ðŸ“Š *Total de notÃ­cias:* ${totalNews}\n`;
+      feed += `   ðŸ”¥ Alta: ${highImportance.length} | âš ï¸ MÃ©dia: ${mediumImportance.length} | â„¹ï¸ Outras: ${lowImportance.length}\n\n`;
 
-      // Seção de alta importância - TODAS as notícias
+      // SeÃ§Ã£o de alta importÃ¢ncia - TODAS as notÃ­cias
       if (highImportance.length > 0) {
-        feed += `🔥 *ALTA IMPORTÂNCIA* (${highImportance.length})\n`;
-        feed += `${"━".repeat(40)}\n\n`;
+        feed += `ðŸ”¥ *ALTA IMPORTÃ‚NCIA* (${highImportance.length})\n`;
+        feed += `${"â”".repeat(40)}\n\n`;
         
         highImportance.forEach((news, index) => {
-          const emoji = categoryEmojis[news.category] || "📄";
+          const emoji = categoryEmojis[news.category] || "ðŸ“„";
           const publishDate = format(new Date(news.publication_date), "dd/MM/yyyy", { locale: ptBR });
           
           feed += `${index + 1}. ${emoji} *${news.title}*\n`;
-          feed += `   📂 ${categoryLabels[news.category]}\n`;
-          feed += `   📅 ${publishDate}\n`;
-          feed += `   📝 ${news.summary}\n`;
+          feed += `   ðŸ“‚ ${categoryLabels[news.category]}\n`;
+          feed += `   ðŸ“… ${publishDate}\n`;
+          feed += `   ðŸ“ ${news.summary}\n`;
           
           if (news.tags && news.tags.length > 0) {
-            feed += `   🏷️ ${news.tags.slice(0, 3).join(", ")}\n`;
+            feed += `   ðŸ·ï¸ ${news.tags.slice(0, 3).join(", ")}\n`;
           }
           
           // LINK EXTERNO - priorizar external_url, depois website da fonte
           const linkToUse = news.external_url || news.source?.website;
           if (linkToUse) {
-            feed += `   🔗 ${linkToUse}\n`;
+            feed += `   ðŸ”— ${linkToUse}\n`;
           }
           
           if (news.source_name) {
-            feed += `   📰 ${news.source_name}\n`;
+            feed += `   ðŸ“° ${news.source_name}\n`;
           }
           
           feed += `\n`;
         });
       }
 
-      // Seção de importância média - TODAS as notícias
+      // SeÃ§Ã£o de importÃ¢ncia mÃ©dia - TODAS as notÃ­cias
       if (mediumImportance.length > 0) {
-        feed += `⚠️ *IMPORTÂNCIA MÉDIA* (${mediumImportance.length})\n`;
-        feed += `${"━".repeat(40)}\n\n`;
+        feed += `âš ï¸ *IMPORTÃ‚NCIA MÃ‰DIA* (${mediumImportance.length})\n`;
+        feed += `${"â”".repeat(40)}\n\n`;
         
         mediumImportance.forEach((news, index) => {
-          const emoji = categoryEmojis[news.category] || "📄";
+          const emoji = categoryEmojis[news.category] || "ðŸ“„";
           const publishDate = format(new Date(news.publication_date), "dd/MM/yyyy", { locale: ptBR });
           
           feed += `${index + 1}. ${emoji} *${news.title}*\n`;
-          feed += `   📂 ${categoryLabels[news.category]} | 📅 ${publishDate}\n`;
-          feed += `   📝 ${news.summary}\n`;
+          feed += `   ðŸ“‚ ${categoryLabels[news.category]} | ðŸ“… ${publishDate}\n`;
+          feed += `   ðŸ“ ${news.summary}\n`;
           
           const linkToUse = news.external_url || news.source?.website;
           if (linkToUse) {
-            feed += `   🔗 ${linkToUse}\n`;
+            feed += `   ðŸ”— ${linkToUse}\n`;
           }
           
           if (news.source_name) {
-            feed += `   📰 ${news.source_name}\n`;
+            feed += `   ðŸ“° ${news.source_name}\n`;
           }
           
           feed += `\n`;
         });
       }
 
-      // Seção de baixa importância - TODAS as notícias
+      // SeÃ§Ã£o de baixa importÃ¢ncia - TODAS as notÃ­cias
       if (lowImportance.length > 0) {
-        feed += `ℹ️ *OUTRAS NOTÍCIAS* (${lowImportance.length})\n`;
-        feed += `${"━".repeat(40)}\n\n`;
+        feed += `â„¹ï¸ *OUTRAS NOTÃCIAS* (${lowImportance.length})\n`;
+        feed += `${"â”".repeat(40)}\n\n`;
         
         lowImportance.forEach((news, index) => {
-          const emoji = categoryEmojis[news.category] || "📄";
+          const emoji = categoryEmojis[news.category] || "ðŸ“„";
           const publishDate = format(new Date(news.publication_date), "dd/MM", { locale: ptBR });
           
           feed += `${index + 1}. ${emoji} *${news.title}*\n`;
-          feed += `   📅 ${publishDate} | 📂 ${categoryLabels[news.category]}\n`;
+          feed += `   ðŸ“… ${publishDate} | ðŸ“‚ ${categoryLabels[news.category]}\n`;
           
           const linkToUse = news.external_url || news.source?.website;
           if (linkToUse) {
-            feed += `   🔗 ${linkToUse}\n`;
+            feed += `   ðŸ”— ${linkToUse}\n`;
           }
           
           feed += `\n`;
@@ -246,21 +246,21 @@ export default function WhatsAppFeedGenerator({ allNews = [] }) {
       });
 
       if (Object.keys(categorySummary).length > 0) {
-        feed += `📈 *RESUMO POR CATEGORIA*\n`;
-        feed += `${"━".repeat(40)}\n`;
+        feed += `ðŸ“ˆ *RESUMO POR CATEGORIA*\n`;
+        feed += `${"â”".repeat(40)}\n`;
         Object.entries(categorySummary).forEach(([category, count]) => {
-          const emoji = categoryEmojis[category] || "📄";
-          feed += `${emoji} ${categoryLabels[category]}: ${count} notícia${count > 1 ? 's' : ''}\n`;
+          const emoji = categoryEmojis[category] || "ðŸ“„";
+          feed += `${emoji} ${categoryLabels[category]}: ${count} notÃ­cia${count > 1 ? 's' : ''}\n`;
         });
         feed += `\n`;
       }
 
-      // Rodapé
-      feed += `${"━".repeat(50)}\n`;
-      feed += `📱 *Forvis Mazars Avisos Contábeis*\n`;
-      feed += `🔄 Atualizado automaticamente\n`;
-      feed += `📧 Para mais detalhes, entre em contato\n`;
-      feed += `⏰ Gerado em: ${format(new Date(), "HH:mm 'de' dd/MM/yyyy", { locale: ptBR })}`;
+      // RodapÃ©
+      feed += `${"â”".repeat(50)}\n`;
+      feed += `ðŸ“± *Contábil News Avisos ContÃ¡beis*\n`;
+      feed += `ðŸ”„ Atualizado automaticamente\n`;
+      feed += `ðŸ“§ Para mais detalhes, entre em contato\n`;
+      feed += `â° Gerado em: ${format(new Date(), "HH:mm 'de' dd/MM/yyyy", { locale: ptBR })}`;
 
       setGeneratedFeed(feed);
     } catch (error) {
@@ -274,7 +274,7 @@ export default function WhatsAppFeedGenerator({ allNews = [] }) {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(generatedFeed);
-      alert("Feed copiado para a área de transferência! 📋✨");
+      alert("Feed copiado para a Ã¡rea de transferÃªncia! ðŸ“‹âœ¨");
     } catch (error) {
       console.error("Erro ao copiar:", error);
       alert("Erro ao copiar. Tente selecionar e copiar manualmente.");
@@ -314,20 +314,20 @@ export default function WhatsAppFeedGenerator({ allNews = [] }) {
           {allNews.length > 0 && (
             <div className="bg-green-50 p-3 rounded-lg">
               <p className="text-sm text-green-800">
-                📊 Dados sincronizados: <strong>{allNews.length} notícias disponíveis</strong>
+                ðŸ“Š Dados sincronizados: <strong>{allNews.length} notÃ­cias disponÃ­veis</strong>
               </p>
             </div>
           )}
 
-          {/* Configurações */}
+          {/* ConfiguraÃ§Ãµes */}
           <div className="space-y-3">
             <Label htmlFor="period" className="flex items-center gap-2 text-gray-700 font-semibold">
               <Calendar className="w-5 h-5 text-blue-600" />
-              Selecione o Período das Notícias:
+              Selecione o PerÃ­odo das NotÃ­cias:
             </Label>
             <Select value={period} onValueChange={setPeriod}>
               <SelectTrigger id="period" className="w-full">
-                <SelectValue placeholder="Selecione o período" />
+                <SelectValue placeholder="Selecione o perÃ­odo" />
               </SelectTrigger>
               <SelectContent className="max-h-[300px]">
                 {periodOptions.map((option) => (
@@ -360,15 +360,15 @@ export default function WhatsAppFeedGenerator({ allNews = [] }) {
           {/* Preview do Feed */}
           {generatedFeed && (
             <div className="space-y-4">
-              <Label className="text-base font-semibold">📄 Preview do Feed:</Label>
+              <Label className="text-base font-semibold">ðŸ“„ Preview do Feed:</Label>
               <Textarea
                 value={generatedFeed}
                 readOnly
                 className="min-h-[400px] font-mono text-sm"
-                placeholder="O feed aparecerá aqui após a geração..."
+                placeholder="O feed aparecerÃ¡ aqui apÃ³s a geraÃ§Ã£o..."
               />
 
-              {/* Ações */}
+              {/* AÃ§Ãµes */}
               <div className="flex gap-3">
                 <Button onClick={copyToClipboard} className="flex-1 bg-green-600 hover:bg-green-700">
                   <Copy className="w-4 h-4 mr-2" />
@@ -384,14 +384,14 @@ export default function WhatsAppFeedGenerator({ allNews = [] }) {
 
           {/* Dicas */}
           <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <h4 className="font-medium text-blue-900 mb-2">💡 Dicas de uso:</h4>
+            <h4 className="font-medium text-blue-900 mb-2">ðŸ’¡ Dicas de uso:</h4>
             <ul className="text-sm text-blue-800 space-y-1">
-              <li>• <strong>16 opções de período</strong> - De hoje até último ano</li>
-              <li>• Inclui TODAS as notícias do período (sem limite)</li>
-              <li>• Mostra o range de datas exato no cabeçalho</li>
-              <li>• Organizadas por importância: Alta → Média → Baixa</li>
-              <li>• Formatação otimizada para WhatsApp com emojis</li>
-              <li>• Resumo estatístico por categoria e importância</li>
+              <li>â€¢ <strong>16 opÃ§Ãµes de perÃ­odo</strong> - De hoje atÃ© Ãºltimo ano</li>
+              <li>â€¢ Inclui TODAS as notÃ­cias do perÃ­odo (sem limite)</li>
+              <li>â€¢ Mostra o range de datas exato no cabeÃ§alho</li>
+              <li>â€¢ Organizadas por importÃ¢ncia: Alta â†’ MÃ©dia â†’ Baixa</li>
+              <li>â€¢ FormataÃ§Ã£o otimizada para WhatsApp com emojis</li>
+              <li>â€¢ Resumo estatÃ­stico por categoria e importÃ¢ncia</li>
             </ul>
           </div>
         </div>

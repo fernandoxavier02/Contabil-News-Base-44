@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { base44 } from "@/api/base44Client";
+import { verifyNewsDates } from "@/api/functions";
 import { Calendar, CheckCircle, XCircle, AlertTriangle, Loader2, FileSearch } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -18,13 +18,13 @@ export default function DateVerifier() {
     setReport(null);
 
     try {
-      const response = await base44.functions.invoke('verifyNewsDates', {
+      const response = await verifyNewsDates({
         sample_size: sampleSize
       });
 
       setReport(response.data);
     } catch (error) {
-      console.error('Erro na verificação:', error);
+      console.error('Erro na verificaÃ§Ã£o:', error);
       alert(`Erro: ${error.message}`);
     } finally {
       setIsVerifying(false);
@@ -37,12 +37,12 @@ export default function DateVerifier() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="w-5 h-5 text-blue-600" />
-            Verificador de Datas das Notícias
+            Verificador de Datas das NotÃ­cias
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-gray-600">
-            Esta ferramenta compara as datas salvas no banco de dados com as datas reais das notícias nas fontes originais.
+            Esta ferramenta compara as datas salvas no banco de dados com as datas reais das notÃ­cias nas fontes originais.
           </p>
 
           <div className="space-y-2">
@@ -54,10 +54,10 @@ export default function DateVerifier() {
               max="50"
               value={sampleSize}
               onChange={(e) => setSampleSize(parseInt(e.target.value) || 10)}
-              placeholder="Quantas notícias verificar"
+              placeholder="Quantas notÃ­cias verificar"
             />
             <p className="text-xs text-gray-500">
-              Número de notícias aleatórias a serem verificadas (máx: 50)
+              NÃºmero de notÃ­cias aleatÃ³rias a serem verificadas (mÃ¡x: 50)
             </p>
           </div>
 
@@ -74,7 +74,7 @@ export default function DateVerifier() {
             ) : (
               <>
                 <FileSearch className="w-4 h-4 mr-2" />
-                Iniciar Verificação
+                Iniciar VerificaÃ§Ã£o
               </>
             )}
           </Button>
@@ -84,7 +84,7 @@ export default function DateVerifier() {
       {report && (
         <Card>
           <CardHeader>
-            <CardTitle>Relatório de Verificação</CardTitle>
+            <CardTitle>RelatÃ³rio de VerificaÃ§Ã£o</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Resumo */}
@@ -106,16 +106,16 @@ export default function DateVerifier() {
               
               <div className="bg-yellow-50 p-4 rounded-lg text-center">
                 <div className="text-2xl font-bold text-yellow-600">{report.unable_to_verify}</div>
-                <div className="text-sm text-gray-600">Não Verificáveis</div>
+                <div className="text-sm text-gray-600">NÃ£o VerificÃ¡veis</div>
               </div>
             </div>
 
-            {/* Precisão */}
+            {/* PrecisÃ£o */}
             <Alert className={report.incorrect_dates === 0 ? 'bg-green-50 border-green-200' : 'bg-yellow-50 border-yellow-200'}>
               <AlertDescription>
                 <div className="flex items-center justify-between">
                   <span className="font-medium">
-                    {report.incorrect_dates === 0 ? '✅' : '⚠️'} Precisão das Datas:
+                    {report.incorrect_dates === 0 ? 'âœ…' : 'âš ï¸'} PrecisÃ£o das Datas:
                   </span>
                   <span className="text-2xl font-bold">{report.accuracy_percentage}%</span>
                 </div>
@@ -160,7 +160,7 @@ export default function DateVerifier() {
                               
                               {result.difference_days > 0 && (
                                 <div className="flex gap-4">
-                                  <span className="text-gray-600">Diferença:</span>
+                                  <span className="text-gray-600">DiferenÃ§a:</span>
                                   <Badge variant="destructive">{result.difference_days} dias</Badge>
                                 </div>
                               )}
@@ -174,7 +174,7 @@ export default function DateVerifier() {
                               
                               {result.confidence && (
                                 <div className="flex gap-4">
-                                  <span className="text-gray-600">Confiança:</span>
+                                  <span className="text-gray-600">ConfianÃ§a:</span>
                                   <Badge variant={
                                     result.confidence === 'high' ? 'default' :
                                     result.confidence === 'medium' ? 'secondary' : 'outline'
@@ -202,7 +202,7 @@ export default function DateVerifier() {
                             rel="noopener noreferrer"
                             className="text-xs text-blue-600 hover:underline mt-2 inline-block"
                           >
-                            Ver notícia original →
+                            Ver notÃ­cia original â†’
                           </a>
                         )}
                       </div>
