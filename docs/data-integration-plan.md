@@ -45,7 +45,7 @@ Adapte a camada `remoteApi` se o seu formato for diferente.
 - [x] Criar `.env.local` com `VITE_API_BASE_URL`.
 - [ ] Incluir `VITE_API_TOKEN` caso a API exija autenticação.
 - [ ] Definir variáveis `VITE_API_ROUTE_*` para cada endpoint quando necessário.
-- [ ] Revisar e ajustar as rotas padrão em `src/api/remoteApi.js`.
+- [x] Revisar e ajustar as rotas padrão em `src/api/remoteApi.js`.
 - [ ] Confirmar formatos de request/response com o time de backend.
 
 ### 4.2 Sincronização de dados

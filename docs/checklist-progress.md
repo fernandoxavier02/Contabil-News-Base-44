@@ -6,7 +6,7 @@ Use este arquivo para acompanhar o progresso das verificações descritas em `do
 - [x] `.env.local` com `VITE_API_BASE_URL`.
 - [ ] Definir `VITE_API_TOKEN` (se necessário).
 - [ ] Definir variáveis `VITE_API_ROUTE_*`.
-- [ ] Revisar rotas em `src/api/remoteApi.js`.
+- [x] Revisar rotas em `src/api/remoteApi.js`.
 
 ## 2. Sincronização de dados
 - [ ] Endpoint `fetchRealNews` retorna `created_news`.
