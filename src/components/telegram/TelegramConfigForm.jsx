@@ -11,11 +11,11 @@ import { Bot, Save, X, Info, AlertCircle } from "lucide-react"; // Added AlertCi
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const categories = [
-  { value: "contabil", label: "Contábil" },
+  { value: "contabil", label: "Contabil" },
   { value: "fiscal", label: "Fiscal" },
   { value: "folha_pagamento", label: "Folha de Pagamento" },
-  { value: "tributaria", label: "Tributária" },
-  { value: "reforma_tributaria", label: "Reforma Tributária" },
+  { value: "tributaria", label: "Tributaria" },
+  { value: "reforma_tributaria", label: "Reforma Tributaria" },
   { value: "ifrs", label: "IFRS - Normas Internacionais" },
   { value: "usgaap", label: "US GAAP - Normas Americanas" },
   { value: "geral", label: "Geral (Todas)" }
@@ -23,7 +23,7 @@ const categories = [
 
 const importanceLevels = [
   { value: "baixa", label: "Baixa ou superior" },
-  { value: "media", label: "Média ou superior" },
+  { value: "media", label: "Media ou superior" },
   { value: "alta", label: "Apenas Alta" }
 ];
 
@@ -48,7 +48,7 @@ export default function TelegramConfigForm({ config, onSubmit, onCancel }) {
     // Validar thread_id antes de enviar
     const threadId = formData.message_thread_id.trim();
     if (threadId !== '' && isNaN(parseInt(threadId))) {
-      setThreadIdError("O ID do tópico deve ser um número ou deixe vazio");
+      setThreadIdError("O ID do topico deve ser um numero ou deixe vazio");
       return;
     }
     
@@ -58,7 +58,7 @@ export default function TelegramConfigForm({ config, onSubmit, onCancel }) {
     try {
       await onSubmit(formData);
     } catch (error) {
-      console.error("Erro ao salvar configuração:", error);
+      console.error("Erro ao salvar configuracao:", error);
       // Optionally, add a state to display user-friendly error message
       // setError("Falha ao salvar. Verifique os dados e tente novamente.");
     } finally {
@@ -87,7 +87,7 @@ export default function TelegramConfigForm({ config, onSubmit, onCancel }) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Bot className="w-5 h-5 text-blue-600" />
-            {config ? "Editar Canal/Tópico" : "Novo Canal/Tópico do Telegram"}
+            {config ? "Editar Canal/Topico" : "Novo Canal/Topico do Telegram"}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -97,33 +97,33 @@ export default function TelegramConfigForm({ config, onSubmit, onCancel }) {
               <AlertCircle className="w-5 h-5 text-red-600" />
               <AlertDescription className="text-sm text-red-900">
                 <div className="space-y-3">
-                  <p className="text-base font-bold">🚨 ATENÇÃO: CONFIGURAÇÃO OBRIGATÓRIA DO TELEGRAM</p>
+                  <p className="text-base font-bold"> ATENCAO: CONFIGURACAO OBRIGATORIA DO TELEGRAM</p>
                   
                   <div className="bg-white p-4 rounded-lg">
-                    <p className="font-semibold mb-2">📱 Passo a Passo para dar permissões ao Bot:</p>
+                    <p className="font-semibold mb-2"> Passo a Passo para dar permissoes ao Bot:</p>
                     <ol className="list-decimal list-inside space-y-2 text-sm">
-                      <li><strong>Abra o Telegram</strong> e vá ao seu canal/grupo</li>
+                      <li><strong>Abra o Telegram</strong> e va ao seu canal/grupo</li>
                       <li>Clique no <strong>nome do canal</strong> no topo</li>
                       <li>Selecione <strong>"Editar"</strong></li>
-                      <li>Vá em <strong>"Administradores"</strong></li>
+                      <li>Va em <strong>"Administradores"</strong></li>
                       <li>Clique em <strong>"Adicionar Administrador"</strong></li>
                       <li>Busque e selecione o <strong>seu bot</strong> (pelo nome do @BotFather)</li>
-                      <li>Ative as permissões:
+                      <li>Ative as permissoes:
                         <ul className="list-disc list-inside ml-4 mt-1">
-                          <li>✅ <strong>Postar mensagens</strong></li>
-                          <li>✅ <strong>Editar mensagens</strong></li>
-                          <li>✅ <strong>Deletar mensagens</strong></li>
-                          <li>✅ <strong>Convidar usuários</strong> (opcional)</li>
+                          <li> <strong>Postar mensagens</strong></li>
+                          <li> <strong>Editar mensagens</strong></li>
+                          <li> <strong>Deletar mensagens</strong></li>
+                          <li> <strong>Convidar usuarios</strong> (opcional)</li>
                         </ul>
                       </li>
                       <li>Clique em <strong>"Salvar"</strong></li>
-                      <li>Agora seu bot está pronto para enviar mensagens!</li>
+                      <li>Agora seu bot esta pronto para enviar mensagens!</li>
                     </ol>
                   </div>
 
                   <div className="bg-yellow-100 p-3 rounded">
-                    <p className="font-semibold text-yellow-900">⚡ Dica Importante:</p>
-                    <p className="text-xs text-yellow-800">Se você não adicionar o bot como administrador, receberá erro de "not enough rights" ao tentar enviar mensagens.</p>
+                    <p className="font-semibold text-yellow-900"> Dica Importante:</p>
+                    <p className="text-xs text-yellow-800">Se voce nao adicionar o bot como administrador, recebera erro de "not enough rights" ao tentar enviar mensagens.</p>
                   </div>
                 </div>
               </AlertDescription>
@@ -133,19 +133,19 @@ export default function TelegramConfigForm({ config, onSubmit, onCancel }) {
             <Alert className="bg-blue-50 border-blue-200">
               <Info className="w-4 h-4 text-blue-600" />
               <AlertDescription className="text-sm text-blue-900">
-                <strong>Dica:</strong> Você pode usar o mesmo canal/grupo com diferentes tópicos para organizar as notícias por categoria. 
+                <strong>Dica:</strong> Voce pode usar o mesmo canal/grupo com diferentes topicos para organizar as noticias por categoria. 
                 Basta usar o mesmo <code className="bg-blue-100 px-1 rounded">channel_id</code> e diferentes <code className="bg-blue-100 px-1 rounded">message_thread_id</code>.
               </AlertDescription>
             </Alert>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="channel_name">Nome do Canal/Tópico *</Label>
+                <Label htmlFor="channel_name">Nome do Canal/Topico *</Label>
                 <Input
                   id="channel_name"
                   value={formData.channel_name}
                   onChange={(e) => handleInputChange('channel_name', e.target.value)}
-                  placeholder="Ex: Tópico Contábil"
+                  placeholder="Ex: Topico Contabil"
                   required
                 />
               </div>
@@ -201,12 +201,12 @@ export default function TelegramConfigForm({ config, onSubmit, onCancel }) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="message_thread_id">ID do Tópico (Opcional)</Label>
+                <Label htmlFor="message_thread_id">ID do Topico (Opcional)</Label>
                 <Input
                   id="message_thread_id"
                   value={formData.message_thread_id}
                   onChange={(e) => handleInputChange('message_thread_id', e.target.value)}
-                  placeholder="Ex: 123 (apenas números)"
+                  placeholder="Ex: 123 (apenas numeros)"
                   className={threadIdError ? "border-red-500 focus-visible:ring-red-500" : ""}
                 />
                 {threadIdError && (
@@ -221,34 +221,34 @@ export default function TelegramConfigForm({ config, onSubmit, onCancel }) {
               </div>
             </div>
 
-            {/* Instruções melhoradas */}
+            {/* Instrucoes melhoradas */}
             <Alert className="bg-amber-50 border-amber-200">
               <Info className="w-4 h-4 text-amber-600" />
               <AlertDescription className="text-sm text-amber-900">
-                <strong>Como obter o ID do tópico (passo a passo):</strong>
+                <strong>Como obter o ID do topico (passo a passo):</strong>
                 <ol className="list-decimal list-inside mt-2 space-y-1">
-                  <li><strong>Abra o Telegram</strong> e vá ao grupo com tópicos</li>
-                  <li><strong>Entre no tópico</strong> onde quer enviar as notícias</li>
-                  <li><strong>Envie uma mensagem</strong> qualquer nesse tópico (ex: "teste")</li>
-                  <li><strong>Toque e segure</strong> na mensagem que você enviou</li>
+                  <li><strong>Abra o Telegram</strong> e va ao grupo com topicos</li>
+                  <li><strong>Entre no topico</strong> onde quer enviar as noticias</li>
+                  <li><strong>Envie uma mensagem</strong> qualquer nesse topico (ex: "teste")</li>
+                  <li><strong>Toque e segure</strong> na mensagem que voce enviou</li>
                   <li>Selecione <strong>"Encaminhar"</strong></li>
                   <li>Na busca, digite <strong>@userinfobot</strong> e selecione-o</li>
                   <li>Envie a mensagem para o bot</li>
-                  <li>O bot responderá mostrando o <code className="bg-amber-100 px-1 rounded">message_thread_id</code></li>
-                  <li><strong>Copie apenas o número</strong> e cole aqui acima</li>
+                  <li>O bot respondera mostrando o <code className="bg-amber-100 px-1 rounded">message_thread_id</code></li>
+                  <li><strong>Copie apenas o numero</strong> e cole aqui acima</li>
                 </ol>
-                <p className="mt-2 text-xs font-semibold">💡 Dica: Se deixar vazio, as notícias vão para o grupo principal (sem tópico específico)</p>
+                <p className="mt-2 text-xs font-semibold"> Dica: Se deixar vazio, as noticias vao para o grupo principal (sem topico especifico)</p>
               </AlertDescription>
             </Alert>
 
             <div className="space-y-2">
-              <Label htmlFor="min_importance">Importância Mínima</Label>
+              <Label htmlFor="min_importance">Importancia Minima</Label>
               <Select
                 value={formData.min_importance}
                 onValueChange={(value) => handleInputChange('min_importance', value)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione a importância mínima" />
+                  <SelectValue placeholder="Selecione a importancia minima" />
                 </SelectTrigger>
                 <SelectContent>
                   {importanceLevels.map((level) => (
@@ -268,7 +268,7 @@ export default function TelegramConfigForm({ config, onSubmit, onCancel }) {
                   onCheckedChange={(checked) => handleInputChange('is_active', checked)}
                 />
                 <Label htmlFor="is_active" className="text-sm font-medium">
-                  Canal/Tópico ativo (receberá notícias)
+                  Canal/Topico ativo (recebera noticias)
                 </Label>
               </div>
 
@@ -279,7 +279,7 @@ export default function TelegramConfigForm({ config, onSubmit, onCancel }) {
                   onCheckedChange={(checked) => handleInputChange('send_automatically', checked)}
                 />
                 <Label htmlFor="send_automatically" className="text-sm font-medium">
-                  Enviar automaticamente após atualização de notícias
+                  Enviar automaticamente apos atualizacao de noticias
                 </Label>
               </div>
             </div>

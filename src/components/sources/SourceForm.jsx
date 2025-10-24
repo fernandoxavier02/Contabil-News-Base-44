@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Globe, Save, X, Rss, Code } from "lucide-react";
+import { Globe, Save, X, Rss } from "lucide-react";
 
 const URL_FIELDS = ["website", "logo_url", "rss_feed_url", "api_endpoint"];
 
@@ -17,7 +17,7 @@ function isValidUrl(value) {
   try {
     const parsed = new URL(value);
     return Boolean(parsed.protocol && parsed.host);
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -47,12 +47,12 @@ export default function SourceForm({ source, onSubmit, onCancel }) {
 
     URL_FIELDS.forEach((field) => {
       if (!isValidUrl(data[field])) {
-        errors[field] = "Informe uma URL válida (incluindo http/https).";
+        errors[field] = "Informe uma URL valida (incluindo http/https).";
       }
     });
 
     if (data.update_method === "rss" && !data.rss_feed_url.trim()) {
-      errors.rss_feed_url = "O feed RSS é obrigatório quando o método escolhido for RSS.";
+      errors.rss_feed_url = "O feed RSS e obrigatorio quando o metodo escolhido for RSS.";
     }
 
     setFormErrors(errors);
@@ -120,17 +120,17 @@ export default function SourceForm({ source, onSubmit, onCancel }) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="credibility_level">Nível de Credibilidade</Label>
+                <Label htmlFor="credibility_level">Nivel de Credibilidade</Label>
                 <Select
                   value={formData.credibility_level}
                   onValueChange={(value) => handleInputChange('credibility_level', value)}
                 >
                   <SelectTrigger id="credibility_level">
-                    <SelectValue placeholder="Selecione o nível" />
+                    <SelectValue placeholder="Selecione o nivel" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="alta">Alta Credibilidade</SelectItem>
-                    <SelectItem value="media">Credibilidade Média</SelectItem>
+                    <SelectItem value="media">Credibilidade Media</SelectItem>
                     <SelectItem value="baixa">Baixa Credibilidade</SelectItem>
                   </SelectContent>
                 </Select>
@@ -138,12 +138,12 @@ export default function SourceForm({ source, onSubmit, onCancel }) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Descrição</Label>
+              <Label htmlFor="description">Descricao</Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
-                placeholder="Descreva a fonte de notícias..."
+                placeholder="Descreva a fonte de noticias..."
                 className="min-h-[80px]"
               />
             </div>
@@ -180,16 +180,16 @@ export default function SourceForm({ source, onSubmit, onCancel }) {
 
             <div className="space-y-4 p-4 border rounded-lg bg-slate-50/50">
               <div className="space-y-2">
-                <Label htmlFor="update_method">Método de Atualização</Label>
+                <Label htmlFor="update_method">Metodo de Atualizacao</Label>
                 <Select
                   value={formData.update_method}
                   onValueChange={(value) => handleInputChange('update_method', value)}
                 >
                   <SelectTrigger id="update_method">
-                    <SelectValue placeholder="Selecione o método" />
+                    <SelectValue placeholder="Selecione o metodo" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="llm">IA Genérica (LLM)</SelectItem>
+                    <SelectItem value="llm">IA Generica (LLM)</SelectItem>
                     <SelectItem value="rss">Feed RSS</SelectItem>
                     <SelectItem value="api" disabled>API Dedicada (em breve)</SelectItem>
                   </SelectContent>
@@ -224,7 +224,7 @@ export default function SourceForm({ source, onSubmit, onCancel }) {
                 onCheckedChange={(checked) => handleInputChange('is_active', checked)}
               />
               <Label htmlFor="is_active" className="text-sm font-medium">
-                Fonte ativa (visível no feed)
+                Fonte ativa (visivel no feed)
               </Label>
             </div>
 

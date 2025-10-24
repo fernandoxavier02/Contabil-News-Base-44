@@ -110,19 +110,29 @@ function createStore(storageKey, options = {}) {
     },
     async create(payload) {
       const data = loadData();
+      const recordId = payload.id || generateId(storageKey.split(":")[1]);
+      const existingIndex = data.findIndex((item) => item.id === recordId);
+      const baseRecord = existingIndex !== -1 ? data[existingIndex] : undefined;
+
       const record = normalizeRecord(
         {
-          id: payload.id || generateId(storageKey.split(":")[1]),
+          ...(baseRecord || {}),
           ...payload,
+          id: baseRecord?.id || recordId,
         },
         defaults
       );
 
       if (normalize) {
-        normalize(record, payload);
+        normalize(record, payload, baseRecord);
       }
 
-      data.push(record);
+      if (existingIndex !== -1) {
+        data[existingIndex] = record;
+      } else {
+        data.push(record);
+      }
+
       saveData(data);
       await delay(DEFAULT_DELAY_MS);
       return clone(record);
@@ -131,7 +141,7 @@ function createStore(storageKey, options = {}) {
       const data = loadData();
       const index = data.findIndex((item) => item.id === id);
       if (index === -1) {
-        throw new Error(`Registro não encontrado (id=${id}).`);
+        throw new Error(`Registro nao encontrado (id=${id}).`);
       }
 
       const updated = normalizeRecord(
@@ -233,16 +243,56 @@ const emailStore = createStore(STORAGE_KEYS.emailConfigs, {
   },
 });
 
-async function syncCreatedNews(items = []) {
-  if (!Array.isArray(items)) return [];
+function normalizeKeyFragment(value) {
+  return String(value ?? "").trim().toLowerCase();
+}
 
+function buildNewsIdentity(record = {}) {
+  if (record.id) {
+    return `id:${record.id}`;
+  }
+
+  const title = normalizeKeyFragment(record.title);
+  const publication = normalizeKeyFragment(record.publication_date);
+  const source = normalizeKeyFragment(record.source_id || record.source_name);
+
+  return `hash:${title}|${publication}|${source}`;
+}
+
+async function syncCreatedNews(items = []) {
+  if (!Array.isArray(items) || items.length === 0) return [];
+
+  const existingRecords = await newsStore.list();
+  const knownKeys = new Set(existingRecords.map((item) => buildNewsIdentity(item)));
+  const knownIds = new Set(existingRecords.map((item) => item.id).filter(Boolean));
   const created = [];
+
   for (const item of items) {
     try {
+      const identity = buildNewsIdentity(item);
+      if (identity && knownKeys.has(identity)) {
+        if (item.id && knownIds.has(item.id)) {
+          try {
+            await newsStore.update(item.id, item);
+          } catch (updateError) {
+            console.warn("[localDatabase] Failed to update duplicated news entry:", updateError);
+          }
+        }
+        continue;
+      }
+
       const record = await newsStore.create(item);
       created.push(record);
+
+      if (identity) {
+        knownKeys.add(identity);
+      }
+      knownKeys.add(buildNewsIdentity(record));
+      if (record.id) {
+        knownIds.add(record.id);
+      }
     } catch (error) {
-      console.warn("[localDatabase] Falha ao salvar notícia retornada pela API:", error);
+      console.warn("[localDatabase] Failed to persist news item returned by API:", error);
     }
   }
   return created;
@@ -257,7 +307,7 @@ async function syncSources(items = []) {
       const record = await sourceStore.create(item);
       persisted.push(record);
     } catch (error) {
-      console.warn("[localDatabase] Falha ao salvar fonte retornada pela API:", error);
+      console.warn("[localDatabase] Failed to persist source item returned by API:", error);
     }
   }
   return persisted;
@@ -265,17 +315,17 @@ async function syncSources(items = []) {
 
 function buildDemoNewsFromSource(params = {}) {
   const now = new Date();
-  const baseTitle = params.source_name || params.sourceName || "Fonte Contábil";
+  const baseTitle = params.source_name || params.sourceName || "Fonte Contabil";
   const category = params.category || params.defaultCategory || "contabil";
 
   return {
-    title: `${baseTitle}: atualização de ${now.toLocaleDateString("pt-BR")}`,
+    title: `${baseTitle}: atualizacao de ${now.toLocaleDateString("pt-BR")}`,
     summary:
       params.summary ||
-      `Resumo automático gerado para ${baseTitle}. Utilize este item para validar integrações de notícias.`,
+      `Resumo automatico gerado para ${baseTitle}. Utilize este item para validar integracoes de noticias.`,
     content:
       params.content ||
-      `Este é um conteúdo fictício criado para o modo de demonstração. Ajuste o endpoint "fetchRealNews" para receber dados reais do backend.`,
+      `Este e um conteudo ficticio criado para o modo de demonstracao. Ajuste o endpoint "fetchRealNews" para receber dados reais do backend.`,
     category,
     importance: "media",
     tags: [category],
@@ -306,7 +356,7 @@ async function fetchRealNews(params) {
     data: {
       success: true,
       message:
-        "Modo demonstração: configure o endpoint `fetchRealNews` para consumir notícias reais.",
+        "Modo demonstracao: configure o endpoint `fetchRealNews` para consumir noticias reais.",
       created_count: 1,
       created_news: [created],
     },
@@ -333,7 +383,7 @@ async function verifyNewsDates(params) {
         publication_date: item.publication_date,
       })),
       message:
-        "Modo demonstração: nenhuma verificação externa executada. Configure `verifyNewsDates` para auditoria real.",
+        "Modo demonstracao: nenhuma verificacao externa executada. Configure `verifyNewsDates` para auditoria real.",
     },
   };
 }
@@ -350,7 +400,7 @@ async function clearAllNews() {
     data: {
       success: true,
       deleted_count: existing.length,
-      message: `${existing.length} notícia(s) removidas do armazenamento local.`,
+      message: `${existing.length} noticia(s) removidas do armazenamento local.`,
     },
   };
 }
@@ -362,7 +412,7 @@ async function resetSources() {
     const demoSources = [
       {
         name: "Receita Federal",
-        description: "Atualizações oficiais sobre legislação tributária e fiscal.",
+        description: "Atualizacoes oficiais sobre legislacao tributaria e fiscal.",
         website: "https://www.gov.br/receitafederal",
         logo_url: "https://logodownload.org/wp-content/uploads/2016/10/receita-federal-logo.png",
         update_method: "rss",
@@ -372,7 +422,7 @@ async function resetSources() {
       },
       {
         name: "Conselho Federal de Contabilidade",
-        description: "Notícias e resoluções do CFC para profissionais contábeis.",
+        description: "Noticias e resolucoes do CFC para profissionais contabeis.",
         website: "https://cfc.org.br",
         logo_url: "https://cfc.org.br/wp-content/themes/cfc/assets/images/logo.svg",
         update_method: "llm",
@@ -380,7 +430,7 @@ async function resetSources() {
         credibility_level: "alta",
       },
       {
-        name: "Portal Tributário",
+        name: "Portal Tributario",
         description: "Curadoria de novidades fiscais e trabalhistas.",
         website: "https://www.portaltributario.com.br",
         update_method: "llm",
@@ -399,7 +449,7 @@ async function resetSources() {
       data: {
         success: true,
         message:
-          "Modo demonstração: fontes de exemplo recriadas. Configure `resetSources` para sincronizar com sua API.",
+          "Modo demonstracao: fontes de exemplo recriadas. Configure `resetSources` para sincronizar com sua API.",
         sources: created,
       },
     };
@@ -426,7 +476,7 @@ async function sendToTelegram(payload) {
     data: {
       success: true,
       message:
-        "Modo demonstração: nenhuma mensagem real enviada. Configure `sendToTelegram` para habilitar o disparo.",
+        "Modo demonstracao: nenhuma mensagem real enviada. Configure `sendToTelegram` para habilitar o disparo.",
       echo: payload,
     },
   };
@@ -442,7 +492,7 @@ async function sendToWhatsApp(payload) {
     data: {
       success: true,
       message:
-        "Modo demonstração: nenhuma mensagem real enviada. Configure `sendToWhatsApp` para habilitar o disparo.",
+        "Modo demonstracao: nenhuma mensagem real enviada. Configure `sendToWhatsApp` para habilitar o disparo.",
       echo: payload,
     },
   };
@@ -458,7 +508,7 @@ async function sendToTeams(payload) {
     data: {
       success: true,
       message:
-        "Modo demonstração: nenhuma mensagem real enviada. Configure `sendToTeams` para habilitar o disparo.",
+        "Modo demonstracao: nenhuma mensagem real enviada. Configure `sendToTeams` para habilitar o disparo.",
       echo: payload,
     },
   };
@@ -474,7 +524,7 @@ async function sendToEmail(payload) {
     data: {
       success: true,
       message:
-        "Modo demonstração: nenhuma mensagem real enviada. Configure `sendToEmail` para habilitar o disparo.",
+        "Modo demonstracao: nenhuma mensagem real enviada. Configure `sendToEmail` para habilitar o disparo.",
       echo: payload,
     },
   };

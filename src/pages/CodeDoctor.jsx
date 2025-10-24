@@ -29,7 +29,7 @@ function ConversationList({ onSelectConversation }) {
         const newConv = await agentSDK.createConversation({
             agent_name: AGENT_NAME,
             metadata: {
-                name: `Sessão de Diagnóstico #${conversations.length + 1}`,
+                name: `Sessao de Diagnostico #${conversations.length + 1}`,
                 createdAt: new Date().toISOString(),
             },
         });
@@ -47,10 +47,10 @@ function ConversationList({ onSelectConversation }) {
     return (
         <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl p-8 border border-white">
             <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold text-slate-800">Sessões de Diagnóstico</h2>
+                <h2 className="text-2xl font-bold text-slate-800">Sessoes de Diagnostico</h2>
                 <Button onClick={handleNewConversation}>
                     <Plus className="w-4 h-4 mr-2" />
-                    Nova Sessão
+                    Nova Sessao
                 </Button>
             </div>
 
@@ -65,7 +65,7 @@ function ConversationList({ onSelectConversation }) {
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <MessageSquare className="w-5 h-5 text-blue-600" />
-                                    <p className="font-semibold text-slate-700">{conv.metadata.name || `Sessão ${conv.id.substring(0, 4)}`}</p>
+                                    <p className="font-semibold text-slate-700">{conv.metadata.name || `Sessao ${conv.id.substring(0, 4)}`}</p>
                                 </div>
                                 <p className="text-sm text-slate-500">
                                     {new Date(conv.metadata.createdAt || conv.created_date).toLocaleString('pt-BR')}
@@ -77,11 +77,11 @@ function ConversationList({ onSelectConversation }) {
             ) : (
                 <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-lg">
                     <FileCode className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-slate-600">Nenhuma sessão encontrada</h3>
-                    <p className="text-slate-500 mt-1 mb-6">Comece uma nova sessão para diagnosticar problemas.</p>
+                    <h3 className="text-lg font-semibold text-slate-600">Nenhuma sessao encontrada</h3>
+                    <p className="text-slate-500 mt-1 mb-6">Comece uma nova sessao para diagnosticar problemas.</p>
                     <Button onClick={handleNewConversation}>
                         <Plus className="w-4 h-4 mr-2" />
-                        Iniciar Primeira Sessão
+                        Iniciar Primeira Sessao
                     </Button>
                 </div>
             )}
@@ -109,9 +109,9 @@ export default function CodeDoctorPage() {
                             <div className="flex items-center gap-4">
                                 <Stethoscope className="w-10 h-10 text-blue-600" />
                                 <div>
-                                    <h1 className="text-4xl font-bold text-[#002855]">Diagnóstico IA</h1>
+                                    <h1 className="text-4xl font-bold text-[#002855]">Diagnostico IA</h1>
                                     <p className="text-lg text-[#58595B]">
-                                        Seu assistente para analisar e corrigir erros de código.
+                                        Seu assistente para analisar e corrigir erros de codigo.
                                     </p>
                                 </div>
                             </div>
@@ -126,7 +126,7 @@ export default function CodeDoctorPage() {
                                             : "text-gray-600 hover:text-gray-900"
                                     }`}
                                 >
-                                    💬 Chat de Diagnóstico
+                                     Chat de Diagnostico
                                 </button>
                                 <button
                                     onClick={() => setActiveTab("dates")}
@@ -136,7 +136,7 @@ export default function CodeDoctorPage() {
                                             : "text-gray-600 hover:text-gray-900"
                                     }`}
                                 >
-                                    📅 Verificar Datas
+                                     Verificar Datas
                                 </button>
                             </div>
                         </div>

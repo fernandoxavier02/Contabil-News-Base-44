@@ -19,7 +19,7 @@ const credibilityColors = {
 
 const credibilityLabels = {
   alta: "Alta Credibilidade",
-  media: "Credibilidade Média",
+  media: "Credibilidade Media",
   baixa: "Baixa Credibilidade"
 };
 

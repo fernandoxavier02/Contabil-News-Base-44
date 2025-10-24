@@ -6,7 +6,8 @@ const IMPORTANCE_LEVELS = ["baixa", "media", "alta"];
 function sanitizeString(value, maxLength) {
   if (value === undefined || value === null) return "";
   const text = String(value).trim();
-  return maxLength ? text.slice(0, maxLength) : text;
+  if (!maxLength) return text;
+  return text.slice(0, maxLength);
 }
 
 function ensureArrayOfStrings(value, maxItems = 8, maxLength = 40) {
@@ -31,7 +32,7 @@ function toIsoDate(value) {
 function normalizeNewsPayload(data) {
   const payload = { ...data };
 
-  payload.title = sanitizeString(payload.title || "Notícia sem título", 180);
+  payload.title = sanitizeString(payload.title || "Noticia sem titulo", 180);
   payload.summary = sanitizeString(payload.summary || payload.title, 800);
   payload.content = sanitizeString(payload.content || payload.summary, 4000);
   payload.category = sanitizeString(payload.category, 40) || "contabil";
@@ -45,21 +46,51 @@ function normalizeNewsPayload(data) {
   return payload;
 }
 
+function buildDemoGeneratedNews(params = {}) {
+  const today = new Date().toISOString().split("T")[0];
+  const category = sanitizeString(params.defaultCategory || params.category, 40) || "contabil";
+  const sourceName = sanitizeString(params.sourceName || params.source_name || "Fonte", 120) || "Fonte";
+  const titleFallback = sanitizeString(params.title, 180) || `${sourceName} update ${today}`;
+
+  return {
+    title: titleFallback,
+    summary:
+      sanitizeString(
+        params.summary ||
+          `Local demo content generated for ${sourceName}. Configure generateNews to fetch real data.`,
+        800
+      ) || titleFallback,
+    content:
+      sanitizeString(
+        params.content ||
+          "This article was generated locally because the generateNews endpoint is not configured.",
+        4000
+      ) || titleFallback,
+    category,
+    importance: IMPORTANCE_LEVELS.includes(params.importance) ? params.importance : "media",
+    tags: ensureArrayOfStrings(
+      Array.isArray(params.tags) && params.tags.length > 0 ? params.tags : [category]
+    ),
+    is_highlighted: Boolean(params.is_highlighted),
+    source_name: sourceName,
+    external_url: sanitizeString(params.sourceWebsite || params.external_url, 500) || null,
+    publication_date: toIsoDate(params.publication_date || today),
+  };
+}
+
 export async function safeCreateNews(newsData) {
   const payload = normalizeNewsPayload(newsData);
   try {
     return await News.create(payload);
   } catch (error) {
-    console.error("[safeCreateNews] Erro ao criar notícia:", error);
+    console.error("[safeCreateNews] Failed to create news entry:", error);
     throw error;
   }
 }
 
 export async function generateNewsViaLLM(params) {
   if (!remoteApi.isRouteConfigured("generateNews")) {
-    throw new Error(
-      "Endpoint de geração de notícias não configurado. Ajuste src/api/remoteApi.js para apontar para sua API real."
-    );
+    return buildDemoGeneratedNews(params);
   }
   return remoteApi.generateNews(params);
 }

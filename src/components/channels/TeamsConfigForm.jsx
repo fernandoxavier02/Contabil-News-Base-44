@@ -3,16 +3,11 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea"; // Added Textarea as per outline, though not used in snippet
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Users, Save, X, Info, Plus, Trash } from "lucide-react"; // Kept Info, Plus, Trash, Alert, AlertDescription as they are used in non-modified sections
-import { Alert, AlertDescription } from "@/components/ui/alert";
-
-// The categories and importanceLevels arrays are replaced by hardcoded SelectItems as per the outline.
-// Therefore, these constants are no longer needed for this component.
+import { Users, Save, X, Plus, Trash } from "lucide-react";
 
 export default function TeamsConfigForm({ config, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
@@ -36,7 +31,7 @@ export default function TeamsConfigForm({ config, onSubmit, onCancel }) {
     try {
       await onSubmit(formData);
     } catch (error) {
-      console.error("Erro ao salvar configuração:", error);
+      console.error("Erro ao salvar configuracao:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -77,7 +72,7 @@ export default function TeamsConfigForm({ config, onSubmit, onCancel }) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-purple-700"> {/* Updated CardTitle styling */}
             <Users className="w-5 h-5" /> {/* Removed specific text color as parent text-purple-700 applies */}
-            {config ? "Editar Configuração Teams" : "Nova Configuração Teams"}
+            {config ? "Editar Configuracao Teams" : "Nova Configuracao Teams"}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -102,7 +97,7 @@ export default function TeamsConfigForm({ config, onSubmit, onCancel }) {
                   id="team_name"
                   value={formData.team_name}
                   onChange={(e) => handleInputChange('team_name', e.target.value)}
-                  placeholder="Ex: Departamento Contábil" // Updated placeholder
+                  placeholder="Ex: Departamento Contabil" // Updated placeholder
                 />
               </div>
             </div>
@@ -124,7 +119,7 @@ export default function TeamsConfigForm({ config, onSubmit, onCancel }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="teams-category">Categoria de Notícias</Label> {/* Updated htmlFor and label text */}
+                <Label htmlFor="teams-category">Categoria de Noticias</Label> {/* Updated htmlFor and label text */}
                 <Select
                   value={formData.category}
                   onValueChange={(value) => handleInputChange('category', value)}
@@ -135,11 +130,11 @@ export default function TeamsConfigForm({ config, onSubmit, onCancel }) {
                   <SelectContent>
                     {/* Hardcoded SelectItems as per outline, replacing dynamic mapping */}
                     <SelectItem value="geral">Geral (Todas)</SelectItem>
-                    <SelectItem value="contabil">Contábil</SelectItem>
+                    <SelectItem value="contabil">Contabil</SelectItem>
                     <SelectItem value="fiscal">Fiscal</SelectItem>
                     <SelectItem value="folha_pagamento">Folha de Pagamento</SelectItem>
-                    <SelectItem value="tributaria">Tributária</SelectItem>
-                    <SelectItem value="reforma_tributaria">Reforma Tributária</SelectItem>
+                    <SelectItem value="tributaria">Tributaria</SelectItem>
+                    <SelectItem value="reforma_tributaria">Reforma Tributaria</SelectItem>
                     <SelectItem value="ifrs">IFRS</SelectItem>
                     <SelectItem value="usgaap">US GAAP</SelectItem>
                   </SelectContent>
@@ -147,18 +142,18 @@ export default function TeamsConfigForm({ config, onSubmit, onCancel }) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="teams-min_importance">Importância Mínima para Envio</Label> {/* Updated htmlFor and label text */}
+                <Label htmlFor="teams-min_importance">Importancia Minima para Envio</Label> {/* Updated htmlFor and label text */}
                 <Select
                   value={formData.min_importance}
                   onValueChange={(value) => handleInputChange('min_importance', value)}
                 >
                   <SelectTrigger id="teams-min_importance"> {/* Updated id */}
-                    <SelectValue placeholder="Selecione o nível" /> {/* Updated placeholder text */}
+                    <SelectValue placeholder="Selecione o nivel" /> {/* Updated placeholder text */}
                   </SelectTrigger>
                   <SelectContent>
                     {/* Hardcoded SelectItems as per outline, replacing dynamic mapping */}
                     <SelectItem value="baixa">Baixa</SelectItem> {/* Updated label */}
-                    <SelectItem value="media">Média</SelectItem> {/* Updated label */}
+                    <SelectItem value="media">Media</SelectItem> {/* Updated label */}
                     <SelectItem value="alta">Alta</SelectItem>   {/* Updated label */}
                   </SelectContent>
                 </Select>
@@ -166,7 +161,7 @@ export default function TeamsConfigForm({ config, onSubmit, onCancel }) {
             </div>
 
             <div className="space-y-3">
-              <Label>Mencionar Usuários (opcional)</Label>
+              <Label>Mencionar Usuarios (opcional)</Label>
               <div className="flex gap-2">
                 <Input
                   value={newMentionEmail}
@@ -205,7 +200,7 @@ export default function TeamsConfigForm({ config, onSubmit, onCancel }) {
                   onCheckedChange={(checked) => handleInputChange('is_active', checked)}
                 />
                 <Label htmlFor="is_active" className="text-sm font-medium">
-                  Canal ativo (receberá notícias)
+                  Canal ativo (recebera noticias)
                 </Label>
               </div>
 
@@ -216,7 +211,7 @@ export default function TeamsConfigForm({ config, onSubmit, onCancel }) {
                   onCheckedChange={(checked) => handleInputChange('send_automatically', checked)}
                 />
                 <Label htmlFor="send_automatically" className="text-sm font-medium">
-                  Enviar automaticamente após atualização de notícias
+                  Enviar automaticamente apos atualizacao de noticias
                 </Label>
               </div>
             </div>

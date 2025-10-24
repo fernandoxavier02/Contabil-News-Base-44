@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Send, Edit, Trash2, Eye, EyeOff, Bot, AlertCircle, CheckCircle } from "lucide-react";
+import { Edit, Trash2, Eye, EyeOff, Bot, CheckCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,11 +24,11 @@ const categoryColors = {
 };
 
 const categoryLabels = {
-  contabil: "Contábil",
+  contabil: "Contabil",
   fiscal: "Fiscal",
   folha_pagamento: "Folha de Pagamento",
-  tributaria: "Tributária",
-  reforma_tributaria: "Reforma Tributária",
+  tributaria: "Tributaria",
+  reforma_tributaria: "Reforma Tributaria",
   geral: "Geral",
   ifrs: "IFRS",
   usgaap: "US GAAP"
@@ -36,7 +36,7 @@ const categoryLabels = {
 
 const importanceLabels = {
   baixa: "Baixa",
-  media: "Média",
+  media: "Media",
   alta: "Alta"
 };
 
@@ -71,12 +71,12 @@ export default function TelegramConfigCard({ config, onEdit, onDelete, onToggleA
                   </Badge>
                   {config.send_automatically && (
                     <Badge className="bg-green-100 text-green-800 text-xs">
-                      Automático
+                      Automatico
                     </Badge>
                   )}
                   {config.message_thread_id && (
                     <Badge className="bg-purple-100 text-purple-800 text-xs">
-                      Tópico
+                      Topico
                     </Badge>
                   )}
                 </div>
@@ -96,7 +96,7 @@ export default function TelegramConfigCard({ config, onEdit, onDelete, onToggleA
             
             {config.message_thread_id && (
               <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">Tópico ID:</span>
+                <span className="text-gray-600">Topico ID:</span>
                 <code className="text-xs bg-purple-100 px-2 py-1 rounded">
                   {config.message_thread_id}
                 </code>
@@ -104,7 +104,7 @@ export default function TelegramConfigCard({ config, onEdit, onDelete, onToggleA
             )}
             
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Importância Mínima:</span>
+              <span className="text-gray-600">Importancia Minima:</span>
               <Badge variant="outline" className="text-xs">
                 {importanceLabels[config.min_importance]}
               </Badge>
@@ -113,7 +113,7 @@ export default function TelegramConfigCard({ config, onEdit, onDelete, onToggleA
             {config.send_automatically && (
               <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 p-2 rounded">
                 <CheckCircle className="w-4 h-4" />
-                <span>Envio automático ativado</span>
+                <span>Envio automatico ativado</span>
               </div>
             )}
           </div>

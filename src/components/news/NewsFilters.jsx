@@ -13,19 +13,19 @@ import {
 } from "@/components/ui/select";
 
 const categories = [
-  { value: "contabil", label: "Contábil", icon: Calculator, color: "bg-blue-100 text-blue-800" },
+  { value: "contabil", label: "Contabil", icon: Calculator, color: "bg-blue-100 text-blue-800" },
   { value: "fiscal", label: "Fiscal", icon: FileText, color: "bg-green-100 text-green-800" },
   { value: "folha_pagamento", label: "Folha de Pagamento", icon: CreditCard, color: "bg-purple-100 text-purple-800" },
-  { value: "tributaria", label: "Tributária", icon: Gavel, color: "bg-orange-100 text-orange-800" },
-  { value: "reforma_tributaria", label: "Reforma Tributária", icon: RefreshCw, color: "bg-red-100 text-red-800" },
+  { value: "tributaria", label: "Tributaria", icon: Gavel, color: "bg-orange-100 text-orange-800" },
+  { value: "reforma_tributaria", label: "Reforma Tributaria", icon: RefreshCw, color: "bg-red-100 text-red-800" },
   { value: "ifrs", label: "IFRS", icon: Calculator, color: "bg-indigo-100 text-indigo-800" },
   { value: "usgaap", label: "US GAAP", icon: Calculator, color: "bg-cyan-100 text-cyan-800" }
 ];
 
 const importanceLevels = [
-  { value: "alta", label: "Alta Importância", icon: AlertTriangle, color: "text-red-600" },
-  { value: "media", label: "Importância Média", icon: Info, color: "text-yellow-600" },
-  { value: "baixa", label: "Baixa Importância", icon: Info, color: "text-green-600" }
+  { value: "alta", label: "Alta Importancia", icon: AlertTriangle, color: "text-red-600" },
+  { value: "media", label: "Importancia Media", icon: Info, color: "text-yellow-600" },
+  { value: "baixa", label: "Baixa Importancia", icon: Info, color: "text-green-600" }
 ];
 
 export default function NewsFilters({
@@ -37,8 +37,18 @@ export default function NewsFilters({
   setSelectedImportance,
   selectedTags,
   setSelectedTags,
-  availableTags
+  availableTags,
 }) {
+  const categoryValue = selectedCategory || "all";
+  const importanceValue = selectedImportance || "all";
+
+  const handleCategoryChange = (value) => {
+    setSelectedCategory(value === "all" ? "" : value);
+  };
+
+  const handleImportanceChange = (value) => {
+    setSelectedImportance(value === "all" ? "" : value);
+  };
   const handleTagToggle = (tag) => {
     if (selectedTags.includes(tag)) {
       setSelectedTags(selectedTags.filter(t => t !== tag));
@@ -79,7 +89,7 @@ export default function NewsFilters({
         <div className="relative">
           <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <Input
-            placeholder="Buscar notícias..."
+            placeholder="Buscar noticias..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 border-gray-200 focus:border-blue-300 focus:ring-blue-100"
@@ -87,12 +97,12 @@ export default function NewsFilters({
         </div>
 
         {/* Categoria */}
-        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+        <Select value={categoryValue} onValueChange={handleCategoryChange}>
           <SelectTrigger className="border-gray-200 focus:border-blue-300">
             <SelectValue placeholder="Todas as categorias" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={null}>Todas as categorias</SelectItem>
+            <SelectItem value="all">Todas as categorias</SelectItem>
             {categories.map((category) => (
               <SelectItem key={category.value} value={category.value}>
                 <div className="flex items-center gap-2">
@@ -104,13 +114,13 @@ export default function NewsFilters({
           </SelectContent>
         </Select>
 
-        {/* Importância */}
-        <Select value={selectedImportance} onValueChange={setSelectedImportance}>
+        {/* Importancia */}
+        <Select value={importanceValue} onValueChange={handleImportanceChange}>
           <SelectTrigger className="border-gray-200 focus:border-blue-300">
-            <SelectValue placeholder="Todas as importâncias" />
+            <SelectValue placeholder="Todas as importancias" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={null}>Todas as importâncias</SelectItem>
+            <SelectItem value="all">Todas as importancias</SelectItem>
             {importanceLevels.map((level) => (
               <SelectItem key={level.value} value={level.value}>
                 <div className="flex items-center gap-2">
@@ -122,7 +132,7 @@ export default function NewsFilters({
           </SelectContent>
         </Select>
 
-        {/* Tags (se disponíveis) */}
+        {/* Tags (se disponiveis) */}
         {availableTags.length > 0 && (
           <div>
             <Select onValueChange={handleTagToggle}>

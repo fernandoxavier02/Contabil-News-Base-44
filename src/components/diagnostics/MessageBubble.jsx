@@ -54,7 +54,7 @@ const FunctionDisplay = ({ toolCall }) => {
                 <span className="text-slate-700 font-medium">{formattedName}</span>
                 {statusConfig.text && (
                     <span className={cn("text-slate-500", isError && "text-red-600")}>
-                        • {statusConfig.text}
+                         {statusConfig.text}
                     </span>
                 )}
                 {!statusConfig.spin && (toolCall.arguments_string || results) && (
@@ -67,7 +67,7 @@ const FunctionDisplay = ({ toolCall }) => {
                 <div className="mt-1.5 ml-3 pl-3 border-l-2 border-slate-200 space-y-2">
                     {toolCall.arguments_string && (
                         <div>
-                            <div className="text-xs text-slate-500 mb-1 font-semibold">Parâmetros:</div>
+                            <div className="text-xs text-slate-500 mb-1 font-semibold">Parametros:</div>
                             <pre className="bg-slate-50 rounded-md p-2 text-xs text-slate-600 whitespace-pre-wrap">
                                 {(() => {
                                     try {
@@ -129,7 +129,7 @@ export default function MessageBubble({ message }) {
                                                     className="absolute top-2 right-2 h-6 w-6 opacity-0 group-hover/code:opacity-100 bg-slate-800 hover:bg-slate-700"
                                                     onClick={() => {
                                                         navigator.clipboard.writeText(String(children).replace(/\n$/, ''));
-                                                        toast.success('Código copiado!');
+                                                        toast.success('Codigo copiado!');
                                                     }}
                                                 >
                                                     <Copy className="h-3 w-3 text-slate-400" />

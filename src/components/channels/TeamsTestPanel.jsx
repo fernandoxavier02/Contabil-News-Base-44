@@ -42,13 +42,13 @@ export default function TeamsTestPanel({ configs = [] }) {
           .filter(n => importanceOrder[n.importance || "media"] >= minImp);
 
         const item = list[0];
-        console.log(`[Test Panel Teams] Para o canal ${cfg.channel_name}, notícia selecionada:`, item ? item.title : "NENHUMA");
+        console.log(`[Test Panel Teams] Para o canal ${cfg.channel_name}, noticia selecionada:`, item ? item.title : "NENHUMA");
 
         if (!item) {
           res.details.push({
             channel: cfg.channel_name || cfg.team_name || "Teams",
             status: "error",
-            error: "Sem notícias compatíveis para este canal (verifique categoria e importância)"
+            error: "Sem noticias compativeis para este canal (verifique categoria e importancia)"
           });
           res.errors++;
           res.total++;
@@ -108,7 +108,7 @@ export default function TeamsTestPanel({ configs = [] }) {
         <Alert className="bg-purple-50 border-purple-200">
           <AlertCircle className="w-4 h-4 text-purple-600" />
           <AlertDescription className="text-sm text-purple-900">
-            Garanta que a URL do Webhook para cada canal do Teams está correta.
+            Garanta que a URL do Webhook para cada canal do Teams esta correta.
           </AlertDescription>
         </Alert>
 
@@ -136,7 +136,7 @@ export default function TeamsTestPanel({ configs = [] }) {
                   <div className="flex justify-between">
                     <div>
                       <div className="font-medium">{d.channel}</div>
-                      <div className="text-gray-600">Notícia: {d.news}</div>
+                      <div className="text-gray-600">Noticia: {d.news}</div>
                       {d.error && <div className="text-red-700 font-semibold">{d.error}</div>}
                     </div>
                     <div>

@@ -22,7 +22,7 @@ export default function WhatsAppSettings({ onStatsUpdate }) {
     setIsLoading(true);
     setError(null);
     try {
-      // Aguardar um pouco antes de fazer a requisição
+      // Aguardar um pouco antes de fazer a requisicao
       await new Promise(resolve => setTimeout(resolve, 300));
       const data = await WhatsAppConfig.list('-created_date');
       setConfigs(data);
@@ -31,11 +31,11 @@ export default function WhatsAppSettings({ onStatsUpdate }) {
         setTimeout(() => onStatsUpdate(), 500);
       }
     } catch (error) {
-      console.error("Erro ao carregar configurações:", error);
+      console.error("Erro ao carregar configuracoes:", error);
       if (error.response?.status === 429) {
-        setError("Muitas requisições. Por favor, aguarde alguns segundos e recarregue a página.");
+        setError("Muitas requisicoes. Por favor, aguarde alguns segundos e recarregue a pagina.");
       } else {
-        setError("Erro ao carregar configurações. Tente novamente.");
+        setError("Erro ao carregar configuracoes. Tente novamente.");
       }
     }
     setIsLoading(false);
@@ -55,13 +55,13 @@ export default function WhatsAppSettings({ onStatsUpdate }) {
       if (editingConfig) {
         await WhatsAppConfig.update(editingConfig.id, configData);
         toast({
-          title: "Configuração atualizada",
+          title: "Configuracao atualizada",
           description: "Os dados do WhatsApp foram salvos.",
         });
       } else {
         await WhatsAppConfig.create(configData);
         toast({
-          title: "Configuração criada",
+          title: "Configuracao criada",
           description: "Um novo canal WhatsApp foi cadastrado.",
         });
       }
@@ -70,10 +70,10 @@ export default function WhatsAppSettings({ onStatsUpdate }) {
       // Aguardar antes de recarregar
       setTimeout(() => loadConfigs(), 500);
     } catch (error) {
-      console.error("Erro ao salvar configuração:", error);
+      console.error("Erro ao salvar configuracao:", error);
       toast({
         variant: "destructive",
-        title: "Erro ao salvar configuração",
+        title: "Erro ao salvar configuracao",
         description: error.message,
       });
     }
@@ -85,19 +85,19 @@ export default function WhatsAppSettings({ onStatsUpdate }) {
   };
 
   const handleDelete = async (configId) => {
-    if (confirm("Tem certeza que deseja excluir esta configuração?")) {
+    if (confirm("Tem certeza que deseja excluir esta configuracao?")) {
       try {
         await WhatsAppConfig.delete(configId);
         setTimeout(() => loadConfigs(), 500);
         toast({
-          title: "Configuração removida",
-          description: "O canal WhatsApp foi excluído.",
+          title: "Configuracao removida",
+          description: "O canal WhatsApp foi excluido.",
         });
       } catch (error) {
-        console.error("Erro ao excluir configuração:", error);
+        console.error("Erro ao excluir configuracao:", error);
         toast({
           variant: "destructive",
-          title: "Erro ao excluir configuração",
+          title: "Erro ao excluir configuracao",
           description: error.message,
         });
       }
@@ -111,7 +111,7 @@ export default function WhatsAppSettings({ onStatsUpdate }) {
       setTimeout(() => loadConfigs(), 500);
       toast({
         title: "Status atualizado",
-        description: `O canal ${config.channel_name || 'WhatsApp'} ${nextStatus ? 'está ativo' : 'foi desativado'}.`,
+        description: `O canal ${config.channel_name || 'WhatsApp'} ${nextStatus ? 'esta ativo' : 'foi desativado'}.`,
       });
     } catch (error) {
       console.error("Erro ao atualizar status:", error);
@@ -130,8 +130,8 @@ export default function WhatsAppSettings({ onStatsUpdate }) {
     <div>
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Configurações WhatsApp</h2>
-          <p className="text-gray-500">Configure números WhatsApp Business via Twilio</p>
+          <h2 className="text-2xl font-bold text-gray-900">Configuracoes WhatsApp</h2>
+          <p className="text-gray-500">Configure numeros WhatsApp Business via Twilio</p>
         </div>
         <Button 
           onClick={() => {
@@ -210,19 +210,19 @@ export default function WhatsAppSettings({ onStatsUpdate }) {
       {isLoading ? (
         <div className="text-center py-12">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-          <p className="mt-4 text-gray-500">Carregando configurações...</p>
+          <p className="mt-4 text-gray-500">Carregando configuracoes...</p>
         </div>
       ) : !error && configs.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl shadow-sm">
           <MessageCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-500 mb-2">Nenhuma configuração WhatsApp</h3>
-          <p className="text-gray-400 mb-6">Configure seu primeiro número WhatsApp Business</p>
+          <h3 className="text-xl font-semibold text-gray-500 mb-2">Nenhuma configuracao WhatsApp</h3>
+          <p className="text-gray-400 mb-6">Configure seu primeiro numero WhatsApp Business</p>
           <Button
             onClick={() => setShowForm(true)}
             className="bg-green-600 hover:bg-green-700"
           >
             <Plus className="w-5 h-5 mr-2" />
-            Criar Configuração
+            Criar Configuracao
           </Button>
         </div>
       ) : null}

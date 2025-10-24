@@ -41,13 +41,13 @@ export default function WhatsAppTestPanel({ configs = [] }) {
           .filter(n => importanceOrder[n.importance || "media"] >= minImp);
         
         const item = list[0];
-        console.log(`[Test Panel WhatsApp] Para o canal ${cfg.channel_name}, notícia selecionada:`, item ? item.title : "NENHUMA");
+        console.log(`[Test Panel WhatsApp] Para o canal ${cfg.channel_name}, noticia selecionada:`, item ? item.title : "NENHUMA");
 
         if (!item) {
           res.details.push({
             channel: cfg.channel_name || cfg.phone_number,
             status: "error",
-            error: "Sem notícias compatíveis para este canal (verifique categoria e importância)"
+            error: "Sem noticias compativeis para este canal (verifique categoria e importancia)"
           });
           res.errors++;
           res.total++;
@@ -75,7 +75,7 @@ export default function WhatsAppTestPanel({ configs = [] }) {
           }
         } catch (e) {
           let msg = e?.response?.data?.error || e.message || "Erro desconhecido";
-          if (msg.includes("Authenticate")) msg = "Credenciais inválidas (Twilio).";
+          if (msg.includes("Authenticate")) msg = "Credenciais invalidas (Twilio).";
           res.errors++;
           res.details.push({
             channel: cfg.channel_name || cfg.phone_number,
@@ -107,7 +107,7 @@ export default function WhatsAppTestPanel({ configs = [] }) {
         <Alert className="bg-amber-50 border-amber-200">
           <AlertCircle className="w-4 h-4 text-amber-600" />
           <AlertDescription className="text-sm text-amber-900">
-            Garanta que suas credenciais (Account SID, API Key, número de envio e destinatário) estão corretas.
+            Garanta que suas credenciais (Account SID, API Key, numero de envio e destinatario) estao corretas.
           </AlertDescription>
         </Alert>
 
@@ -135,7 +135,7 @@ export default function WhatsAppTestPanel({ configs = [] }) {
                   <div className="flex justify-between">
                     <div>
                       <div className="font-medium">{d.channel}</div>
-                      {d.news && <div className="text-gray-600">Notícia: {d.news}</div>}
+                      {d.news && <div className="text-gray-600">Noticia: {d.news}</div>}
                       {d.error && <div className="text-red-700 font-semibold">{d.error}</div>}
                     </div>
                     <div>

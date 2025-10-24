@@ -16,32 +16,32 @@ const categoryColors = {
 };
 
 const categoryLabels = {
-  contabil: "Contábil",
+  contabil: "Contabil",
   fiscal: "Fiscal",
   folha_pagamento: "Folha de Pagamento", 
-  tributaria: "Tributária",
-  reforma_tributaria: "Reforma Tributária",
+  tributaria: "Tributaria",
+  reforma_tributaria: "Reforma Tributaria",
   ifrs: "IFRS",
   usgaap: "US GAAP"
 };
 
 const importanceConfig = {
   alta: {
-    label: "Alta Importância",
+    label: "Alta Importancia",
     color: "bg-gradient-to-r from-red-500 to-red-600 text-white",
     icon: AlertTriangle,
     badgeColor: "bg-red-500",
     ringColor: "ring-red-500/20"
   },
   media: {
-    label: "Importância Média",
+    label: "Importancia Media",
     color: "bg-gradient-to-r from-yellow-500 to-yellow-600 text-white",
     icon: Info,
     badgeColor: "bg-yellow-500",
     ringColor: "ring-yellow-500/20"
   },
   baixa: {
-    label: "Baixa Importância",
+    label: "Baixa Importancia",
     color: "bg-gradient-to-r from-green-500 to-green-600 text-white",
     icon: Info,
     badgeColor: "bg-green-500",
@@ -49,23 +49,29 @@ const importanceConfig = {
   }
 };
 
-// Função para formatar data SEM fuso horário
+// Funcao para formatar data sem depender do fuso local
 function formatDateLocal(dateString) {
-  if (!dateString) return '';
-  
-  // Parse manual da string YYYY-MM-DD
-  const [year, month, day] = dateString.split('-').map(Number);
-  
-  // Criar Date usando construtor com valores separados (usa fuso local, não UTC)
-  const date = new Date(year, month - 1, day);
-  
-  // Formatar manualmente para evitar problemas de locale
+  if (!dateString) return "";
+
+  const [year, month, day] = dateString.split("-").map(Number);
+  const monthIndex = Number.isNaN(month) ? 0 : Math.max(0, Math.min(11, month - 1));
+
   const monthNames = [
-    'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
-    'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez",
   ];
-  
-  return `${day} ${monthNames[month - 1]} ${year}`;
+
+  return `${day} ${monthNames[monthIndex]} ${year}`;
 }
 
 export default function NewsCard({ news, onReadMore, isHighlighted, source, isNew }) {

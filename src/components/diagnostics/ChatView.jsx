@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { agentSDK } from "@/agents";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, CornerDownLeft, Loader2, ArrowLeft } from "lucide-react";
+import { Send, Loader2, ArrowLeft } from "lucide-react";
 import MessageBubble from "./MessageBubble";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -80,7 +80,7 @@ export default function ChatView({ conversationId }) {
                         <ArrowLeft className="w-5 h-5 text-slate-600" />
                     </Link>
                     <h2 className="text-lg font-semibold text-slate-800">
-                        {conversation.metadata?.name || 'Sessão de Diagnóstico'}
+                        {conversation.metadata?.name || 'Sessao de Diagnostico'}
                     </h2>
                 </div>
             </div>

@@ -28,11 +28,11 @@ export default function EmailSettings({ onStatsUpdate }) {
         setTimeout(() => onStatsUpdate(), 500);
       }
     } catch (error) {
-      console.error("Erro ao carregar configurações:", error);
+      console.error("Erro ao carregar configuracoes:", error);
       if (error.response?.status === 429) {
-        setError("Muitas requisições. Por favor, aguarde alguns segundos e recarregue a página.");
+        setError("Muitas requisicoes. Por favor, aguarde alguns segundos e recarregue a pagina.");
       } else {
-        setError("Erro ao carregar configurações. Tente novamente.");
+        setError("Erro ao carregar configuracoes. Tente novamente.");
       }
     }
     setIsLoading(false);
@@ -57,8 +57,8 @@ export default function EmailSettings({ onStatsUpdate }) {
       setEditingConfig(null);
       setTimeout(() => loadConfigs(), 500);
     } catch (error) {
-      console.error("Erro ao salvar configuração:", error);
-      alert("Ocorreu um erro ao salvar a configuração.");
+      console.error("Erro ao salvar configuracao:", error);
+      alert("Ocorreu um erro ao salvar a configuracao.");
     }
   };
 
@@ -68,12 +68,12 @@ export default function EmailSettings({ onStatsUpdate }) {
   };
 
   const handleDelete = async (configId) => {
-    if (confirm("Tem certeza que deseja excluir esta configuração?")) {
+    if (confirm("Tem certeza que deseja excluir esta configuracao?")) {
       try {
         await EmailConfig.delete(configId);
         setTimeout(() => loadConfigs(), 500);
       } catch (error) {
-        console.error("Erro ao excluir configuração:", error);
+        console.error("Erro ao excluir configuracao:", error);
       }
     }
   };
@@ -94,8 +94,8 @@ export default function EmailSettings({ onStatsUpdate }) {
     <div>
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Configurações Email</h2>
-          <p className="text-gray-500">Configure listas de distribuição de email</p>
+          <h2 className="text-2xl font-bold text-gray-900">Configuracoes Email</h2>
+          <p className="text-gray-500">Configure listas de distribuicao de email</p>
         </div>
         <Button 
           onClick={() => {
@@ -173,13 +173,13 @@ export default function EmailSettings({ onStatsUpdate }) {
       {isLoading ? (
         <div className="text-center py-12">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
-          <p className="mt-4 text-gray-500">Carregando configurações...</p>
+          <p className="mt-4 text-gray-500">Carregando configuracoes...</p>
         </div>
       ) : !error && configs.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl shadow-sm">
           <Mail className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-500 mb-2">Nenhuma lista de email</h3>
-          <p className="text-gray-400 mb-6">Configure sua primeira lista de distribuição</p>
+          <p className="text-gray-400 mb-6">Configure sua primeira lista de distribuicao</p>
           <Button
             onClick={() => setShowForm(true)}
             className="bg-orange-600 hover:bg-orange-700"

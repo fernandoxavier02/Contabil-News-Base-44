@@ -30,7 +30,7 @@ export default function EmailConfigForm({ config, onSubmit, onCancel }) {
     try {
       await onSubmit(formData);
     } catch (error) {
-      console.error("Erro ao salvar configuração:", error);
+      console.error("Erro ao salvar configuracao:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -65,38 +65,38 @@ export default function EmailConfigForm({ config, onSubmit, onCancel }) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="recipient_emails">Emails dos Destinatários *</Label>
-              <Textarea id="recipient_emails" value={Array.isArray(formData.recipient_emails) ? formData.recipient_emails.join(', ') : ''} onChange={(e) => handleInputChange('recipient_emails', e.target.value.split(',').map(email => email.trim()).filter(email => email))} placeholder="separados por vírgula. ex: email1@teste.com, email2@teste.com" className="min-h-[100px]" required />
+              <Label htmlFor="recipient_emails">Emails dos Destinatarios *</Label>
+              <Textarea id="recipient_emails" value={Array.isArray(formData.recipient_emails) ? formData.recipient_emails.join(', ') : ''} onChange={(e) => handleInputChange('recipient_emails', e.target.value.split(',').map(email => email.trim()).filter(email => email))} placeholder="separados por virgula. ex: email1@teste.com, email2@teste.com" className="min-h-[100px]" required />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="email-category">Categoria de Notícias</Label>
+                <Label htmlFor="email-category">Categoria de Noticias</Label>
                 <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
                   <SelectTrigger id="email-category">
                     <SelectValue placeholder="Selecione a categoria" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="geral">Geral (Todas)</SelectItem>
-                    <SelectItem value="contabil">Contábil</SelectItem>
+                    <SelectItem value="contabil">Contabil</SelectItem>
                     <SelectItem value="fiscal">Fiscal</SelectItem>
                     <SelectItem value="folha_pagamento">Folha de Pagamento</SelectItem>
-                    <SelectItem value="tributaria">Tributária</SelectItem>
-                    <SelectItem value="reforma_tributaria">Reforma Tributária</SelectItem>
+                    <SelectItem value="tributaria">Tributaria</SelectItem>
+                    <SelectItem value="reforma_tributaria">Reforma Tributaria</SelectItem>
                     <SelectItem value="ifrs">IFRS</SelectItem>
                     <SelectItem value="usgaap">US GAAP</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email-min_importance">Importância Mínima para Envio</Label>
+                <Label htmlFor="email-min_importance">Importancia Minima para Envio</Label>
                 <Select value={formData.min_importance} onValueChange={(value) => handleInputChange('min_importance', value)}>
                   <SelectTrigger id="email-min_importance">
-                    <SelectValue placeholder="Selecione o nível" />
+                    <SelectValue placeholder="Selecione o nivel" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="baixa">Baixa</SelectItem>
-                    <SelectItem value="media">Média</SelectItem>
+                    <SelectItem value="media">Media</SelectItem>
                     <SelectItem value="alta">Alta</SelectItem>
                   </SelectContent>
                 </Select>
@@ -111,7 +111,7 @@ export default function EmailConfigForm({ config, onSubmit, onCancel }) {
                   onCheckedChange={(checked) => handleInputChange('is_active', checked)}
                 />
                 <Label htmlFor="is_active" className="text-sm font-medium">
-                  Lista ativa (receberá notícias)
+                  Lista ativa (recebera noticias)
                 </Label>
               </div>
 
@@ -122,13 +122,13 @@ export default function EmailConfigForm({ config, onSubmit, onCancel }) {
                   onCheckedChange={(checked) => handleInputChange('send_daily_digest', checked)}
                 />
                 <Label htmlFor="send_daily_digest" className="text-sm font-medium">
-                  Enviar resumo diário ao invés de notícias individuais
+                  Enviar resumo diario ao inves de noticias individuais
                 </Label>
               </div>
 
               {formData.send_daily_digest && (
                 <div className="space-y-2 ml-8">
-                  <Label htmlFor="digest_time">Horário do Resumo</Label>
+                  <Label htmlFor="digest_time">Horario do Resumo</Label>
                   <Input
                     id="digest_time"
                     type="time"
@@ -147,7 +147,7 @@ export default function EmailConfigForm({ config, onSubmit, onCancel }) {
                     onCheckedChange={(checked) => handleInputChange('send_automatically', checked)}
                   />
                   <Label htmlFor="send_automatically" className="text-sm font-medium">
-                    Enviar automaticamente após atualização de notícias
+                    Enviar automaticamente apos atualizacao de noticias
                   </Label>
                 </div>
               )}

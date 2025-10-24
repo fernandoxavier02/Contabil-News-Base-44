@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Newspaper, Globe, Send, Calculator, FileText, CreditCard, Gavel, RefreshCw, TrendingUp, Stethoscope } from "lucide-react";
@@ -29,12 +29,12 @@ const navigationItems = [
     icon: Globe,
   },
   {
-    title: "Canais de DistribuiÃ§Ã£o", // Changed from "Telegram"
+    title: "Canais de Distribuicao", // Changed from "Telegram"
     url: createPageUrl("ChannelSettings"), // Changed from "TelegramSettings"
     icon: Send,
   },
   {
-    title: "DiagnÃ³stico IA",
+    title: "Diagnostico IA",
     url: createPageUrl("CodeDoctor"),
     icon: Stethoscope,
   },
@@ -42,7 +42,7 @@ const navigationItems = [
 
 const categoryItems = [
   {
-    title: "ContÃ¡bil",
+    title: "Contabil",
     category: "contabil",
     icon: Calculator,
   },
@@ -57,12 +57,12 @@ const categoryItems = [
     icon: CreditCard,
   },
   {
-    title: "TributÃ¡ria",
+    title: "Tributaria",
     category: "tributaria",
     icon: Gavel,
   },
   {
-    title: "Reforma TributÃ¡ria",
+    title: "Reforma Tributaria",
     category: "reforma_tributaria",
     icon: RefreshCw,
   },
@@ -78,7 +78,7 @@ const categoryItems = [
   }
 ];
 
-export default function Layout({ children, currentPageName }) {
+export default function Layout({ children }) {
   const location = useLocation();
 
   return (
@@ -96,7 +96,7 @@ export default function Layout({ children, currentPageName }) {
           font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
-        /* ForÃ§ar contraste no sidebar */
+        /* Forcar contraste no sidebar */
         [data-sidebar] {
           background: linear-gradient(180deg, #002855 0%, #003875 100%) !important;
         }
@@ -120,7 +120,7 @@ export default function Layout({ children, currentPageName }) {
             <div className="flex items-center justify-center bg-white rounded-xl p-4 shadow-lg">
               <img
                 src={appLogo}
-                alt="Contábil News"
+                alt="Contabil News"
                 className="h-16 object-contain"
                 onError={(e) => {
                   console.error('Erro ao carregar logo do sidebar:', e);
@@ -137,7 +137,7 @@ export default function Layout({ children, currentPageName }) {
               <SidebarGroupLabel className="text-xs font-bold uppercase tracking-wider px-3 py-3 mb-2" style={{
                 color: 'rgba(255, 255, 255, 0.7)'
               }}>
-                NavegaÃ§Ã£o Principal
+                Navegacao Principal
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
@@ -212,10 +212,10 @@ export default function Layout({ children, currentPageName }) {
               <SidebarTrigger className="hover:bg-gray-100 p-2 rounded-lg transition-colors duration-200" />
               <img
                 src={appLogo}
-                alt="Contábil News"
+                alt="Contabil News"
                 className="h-8 object-contain"
                 onError={(e) => {
-                  console.error('Erro ao carregar logo do cabeÃ§alho mÃ³vel:', e);
+                  console.error('Erro ao carregar logo do cabecalho movel:', e);
                   e.target.style.display = 'none';
                 }}
               />
@@ -227,7 +227,7 @@ export default function Layout({ children, currentPageName }) {
           </div>
 
           <footer className="bg-[#002855] text-white py-4 px-6 text-center text-sm">
-            <p className="opacity-80">Â© 2025 Contábil News - Avisos ContÃ¡beis | Todos os direitos reservados</p>
+            <p className="opacity-80"> 2025 Contabil News - Avisos Contabeis | Todos os direitos reservados</p>
           </footer>
         </main>
       </div>

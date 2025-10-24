@@ -1,4 +1,4 @@
-﻿
+
 import React, { useState, useEffect, useCallback } from "react";
 import { Source } from "@/api/entities";
 import { Button } from "@/components/ui/button";
@@ -41,7 +41,7 @@ export default function SourcesPage() {
       setSources(data);
     } catch (error) {
       console.error("Erro ao carregar fontes:", error);
-      setLoadError("Não foi possível carregar as fontes. Tente novamente.");
+      setLoadError("Nao foi possivel carregar as fontes. Tente novamente.");
       toast({
         variant: "destructive",
         title: "Falha ao carregar fontes",
@@ -67,7 +67,7 @@ export default function SourcesPage() {
       loadSources();
       toast({
         title: editingSource ? "Fonte atualizada" : "Fonte criada",
-        description: "As alterações foram salvas com sucesso.",
+        description: "As alteracoes foram salvas com sucesso.",
       });
     } catch (error) {
       console.error("Erro ao salvar fonte:", error);
@@ -95,7 +95,7 @@ export default function SourcesPage() {
         loadSources();
         toast({
           title: "Fonte removida",
-          description: "A fonte foi excluída do catálogo.",
+          description: "A fonte foi excluida do catalogo.",
         });
       } catch (error) {
         console.error("Erro ao excluir fonte:", error);
@@ -116,7 +116,7 @@ export default function SourcesPage() {
       loadSources();
       toast({
         title: "Status atualizado",
-        description: `A fonte ${source.is_active ? "foi desativada" : "está ativa"}.`,
+        description: `A fonte ${source.is_active ? "foi desativada" : "esta ativa"}.`,
       });
     } catch (error) {
       console.error("Erro ao atualizar status da fonte:", error);
@@ -142,8 +142,8 @@ export default function SourcesPage() {
 
         if (rssResult && rssResult.success) {
           toast({
-            title: "Busca concluída",
-            description: `${rssResult.created_count || rssResult.created_news?.length || 0} notícia(s) criadas a partir do RSS de ${source.name}.`,
+            title: "Busca concluida",
+            description: `${rssResult.created_count || rssResult.created_news?.length || 0} noticia(s) criadas a partir do RSS de ${source.name}.`,
           });
         } else {
           throw new Error(rssResult?.error || "Falha ao buscar RSS.");
@@ -153,11 +153,11 @@ export default function SourcesPage() {
         const selectedCategory = categories[Math.floor(Math.random() * categories.length)];
 
         const categoryPrompts = {
-          contabil: "notícias sobre normas contábeis, demonstrações financeiras, balanços, CPC, CFC",
-          fiscal: "notícias sobre legislação fiscal, impostos, declarações, DCTF, SPED, Receita Federal",
-          folha_pagamento: "notícias sobre eSocial, folha de pagamento, trabalhistas, INSS, FGTS",
-          tributaria: "notícias sobre direito tributário, jurisprudência tributária, STF, planejamento tributário",
-          reforma_tributaria: "notícias sobre reforma tributária brasileira, IBS, CBS, IS, PEC da reforma",
+          contabil: "noticias sobre normas contabeis, demonstracoes financeiras, balancos, CPC, CFC",
+          fiscal: "noticias sobre legislacao fiscal, impostos, declaracoes, DCTF, SPED, Receita Federal",
+          folha_pagamento: "noticias sobre eSocial, folha de pagamento, trabalhistas, INSS, FGTS",
+          tributaria: "noticias sobre direito tributario, jurisprudencia tributaria, STF, planejamento tributario",
+          reforma_tributaria: "noticias sobre reforma tributaria brasileira, IBS, CBS, IS, PEC da reforma",
         };
 
         const newsData = await generateNewsViaLLM({
@@ -171,15 +171,15 @@ export default function SourcesPage() {
 
         await safeCreateNews(newsData);
         toast({
-          title: "Notícia criada",
-          description: `Nova notícia adicionada a partir de ${source.name}.`,
+          title: "Noticia criada",
+          description: `Nova noticia adicionada a partir de ${source.name}.`,
         });
       }
     } catch (error) {
-      console.error("Erro ao buscar notícias:", error);
+      console.error("Erro ao buscar noticias:", error);
       toast({
         variant: "destructive",
-        title: "Erro ao criar notícia",
+        title: "Erro ao criar noticia",
         description: error.message,
       });
     } finally {
@@ -188,7 +188,7 @@ export default function SourcesPage() {
   };
 
   const handleResetSources = async () => {
-    if (!confirm('⚠️ ATENÇÃO: isso irá apagar todas as fontes atuais e recriar o catálogo padrão. Deseja continuar?')) {
+    if (!confirm(' ATENCAO: isso ira apagar todas as fontes atuais e recriar o catalogo padrao. Deseja continuar?')) {
       return;
     }
 
@@ -242,13 +242,13 @@ export default function SourcesPage() {
               <div className="flex items-center gap-4">
                 <img 
                   src={appLogo} 
-                  alt="Contábil News"
+                  alt="Contabil News"
                   className="h-16 object-contain brightness-0 invert"
                   onError={(e) => e.target.style.display = 'none'}
                 />
                 <div className="text-white">
                   <h1 className="text-3xl font-bold mb-2">Gerenciar Fontes</h1>
-                  <p className="text-white/80">Configure e gerencie as fontes de notÃ­cias</p>
+                  <p className="text-white/80">Configure e gerencie as fontes de noticias</p>
                 </div>
               </div>
               <div className="flex gap-3">
@@ -392,7 +392,7 @@ export default function SourcesPage() {
             <div className="text-center py-12 bg-white/85 backdrop-blur-xl rounded-xl shadow-lg border border-white">
               <Globe className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-500 mb-2">Nenhuma fonte cadastrada</h3>
-              <p className="text-gray-400 mb-6">Comece criando sua primeira fonte de notÃ­cias</p>
+              <p className="text-gray-400 mb-6">Comece criando sua primeira fonte de noticias</p>
               <Button 
                 onClick={() => setShowForm(true)}
                 className="bg-green-600 hover:bg-green-700"
@@ -408,10 +408,10 @@ export default function SourcesPage() {
             <AlertDialogHeader>
               <AlertDialogTitle className="flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-red-600" />
-                Confirmar ExclusÃ£o
+                Confirmar Exclusao
               </AlertDialogTitle>
               <AlertDialogDescription>
-                Tem certeza que deseja excluir esta fonte? Esta aÃ§Ã£o nÃ£o pode ser desfeita.
+                Tem certeza que deseja excluir esta fonte? Esta acao nao pode ser desfeita.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

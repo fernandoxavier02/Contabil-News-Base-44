@@ -6,7 +6,7 @@ const DEFAULT_CONVERSATIONS = [
     id: "conv_demo",
     agent_name: "code_diagnostics_agent",
     metadata: {
-      name: "Exemplo de Diagnóstico",
+      name: "Exemplo de Diagnostico",
       createdAt: "2025-01-12T14:00:00.000Z",
     },
     created_at: "2025-01-12T14:00:00.000Z",
@@ -16,14 +16,14 @@ const DEFAULT_CONVERSATIONS = [
         id: "msg_demo_system",
         role: "system",
         content:
-          "Você está no modo local do Contábil News. Cole logs de erro ou descreva um problema para receber sugestões.",
+          "Voce esta no modo local do Contabil News. Cole logs de erro ou descreva um problema para receber sugestoes.",
         created_at: "2025-01-12T14:00:00.000Z",
       },
       {
         id: "msg_demo_assistant",
         role: "assistant",
         content:
-          "Olá! Compartilhe uma mensagem de erro, stack trace ou explique o comportamento que deseja analisar. Eu irei sugerir causas prováveis e passos para resolução.",
+          "Ola! Compartilhe uma mensagem de erro, stack trace ou explique o comportamento que deseja analisar. Eu irei sugerir causas provaveis e passos para resolucao.",
         created_at: "2025-01-12T14:00:05.000Z",
       },
     ],
@@ -75,11 +75,11 @@ function ensureConversation(conversationOrId) {
   const conversations = loadConversations();
   const id = typeof conversationOrId === "string" ? conversationOrId : conversationOrId?.id;
   if (!id) {
-    throw new Error("Conversação inválida");
+    throw new Error("Conversacao invalida");
   }
   const index = conversations.findIndex((conv) => conv.id === id);
   if (index === -1) {
-    throw new Error(`Conversação não encontrada (${id})`);
+    throw new Error(`Conversacao nao encontrada (${id})`);
   }
   return { conversations, index };
 }
@@ -88,20 +88,20 @@ function generateAssistantReply(prompt) {
   const trimmed = (prompt || "").trim();
 
   if (!trimmed) {
-    return "Não identifiquei detalhes específicos no seu relato. Poderia compartilhar o erro ou comportamento observado?";
+    return "Nao identifiquei detalhes especificos no seu relato. Poderia compartilhar o erro ou comportamento observado?";
   }
 
   const suggestions = [
-    "Revise os logs para identificar a primeira ocorrência do erro e isole o trecho de código responsável.",
-    "Confira se todas as dependências necessárias estão instaladas e com versões compatíveis.",
-    "Verifique se há variáveis de ambiente ausentes ou com valores inesperados.",
-    "Tente reproduzir o problema em ambiente local com configuração mínima para facilitar a análise.",
-    "Adicione logs adicionais no ponto crítico para entender o fluxo de dados durante a execução.",
+    "Revise os logs para identificar a primeira ocorrencia do erro e isole o trecho de codigo responsavel.",
+    "Confira se todas as dependencias necessarias estao instaladas e com versoes compativeis.",
+    "Verifique se ha variaveis de ambiente ausentes ou com valores inesperados.",
+    "Tente reproduzir o problema em ambiente local com configuracao minima para facilitar a analise.",
+    "Adicione logs adicionais no ponto critico para entender o fluxo de dados durante a execucao.",
   ];
 
   const randomTip = suggestions[Math.floor(Math.random() * suggestions.length)];
 
-  return `Analisando o trecho fornecido:\n\n${trimmed}\n\nSugestão rápida:\n- ${randomTip}\n\nSe ainda precisar de ajuda, informe o stack trace completo ou os passos para reproduzir.`;
+  return `Analisando o trecho fornecido:\n\n${trimmed}\n\nSugestao rapida:\n- ${randomTip}\n\nSe ainda precisar de ajuda, informe o stack trace completo ou os passos para reproduzir.`;
 }
 
 async function scheduleAssistantResponse(conversationId, userMessage) {
@@ -150,7 +150,7 @@ export const agentSDK = {
       id: generateId("conv"),
       agent_name,
       metadata: {
-        name: metadata.name || "Sessão de diagnóstico",
+        name: metadata.name || "Sessao de diagnostico",
         createdAt: metadata.createdAt || now,
       },
       created_at: now,
@@ -160,7 +160,7 @@ export const agentSDK = {
           id: generateId("msg"),
           role: "assistant",
           content:
-            "Olá! Estou pronto para ajudar. Descreva o erro, compartilhe um stack trace ou explique o comportamento inesperado que deseja analisar.",
+            "Ola! Estou pronto para ajudar. Descreva o erro, compartilhe um stack trace ou explique o comportamento inesperado que deseja analisar.",
           created_at: now,
         },
       ],
@@ -178,7 +178,7 @@ export const agentSDK = {
     const conversations = loadConversations();
     const conversation = conversations.find((conv) => conv.id === conversationId);
     if (!conversation) {
-      throw new Error(`Conversação não encontrada (${conversationId})`);
+      throw new Error(`Conversacao nao encontrada (${conversationId})`);
     }
     await delay(80);
     return clone(conversation);

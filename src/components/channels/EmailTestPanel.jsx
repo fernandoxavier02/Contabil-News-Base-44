@@ -42,14 +42,14 @@ export default function EmailTestPanel({ configs = [] }) {
           .filter(n => importanceOrder[n.importance || "media"] >= minImp);
 
         const item = list[0];
-        console.log(`[Test Panel Email] Para a lista ${cfg.list_name}, notícia selecionada:`, item ? item.title : "NENHUMA");
+        console.log(`[Test Panel Email] Para a lista ${cfg.list_name}, noticia selecionada:`, item ? item.title : "NENHUMA");
 
         if (!item) {
           res.details.push({
             channel: cfg.list_name || "Lista de Email",
             status: "error",
-            news: "Nenhuma notícia compatível",
-            error: "Sem notícias compatíveis para esta lista (verifique categoria e importância)"
+            news: "Nenhuma noticia compativel",
+            error: "Sem noticias compativeis para esta lista (verifique categoria e importancia)"
           });
           res.errors++;
           res.total++;
@@ -110,7 +110,7 @@ export default function EmailTestPanel({ configs = [] }) {
         <Alert className="bg-orange-50 border-orange-200">
           <AlertCircle className="w-4 h-4 text-orange-600" />
           <AlertDescription className="text-sm text-orange-900">
-            A plataforma enviará emails usando um serviço integrado. Verifique se os emails de destino estão corretos.
+            A plataforma enviara emails usando um servico integrado. Verifique se os emails de destino estao corretos.
           </AlertDescription>
         </Alert>
 
@@ -138,7 +138,7 @@ export default function EmailTestPanel({ configs = [] }) {
                   <div className="flex justify-between">
                     <div>
                       <div className="font-medium">{d.channel}</div>
-                      <div className="text-gray-600">Notícia: {d.news}</div>
+                      <div className="text-gray-600">Noticia: {d.news}</div>
                       {d.error && <div className="text-red-700 font-semibold">{d.error}</div>}
                     </div>
                     <div>

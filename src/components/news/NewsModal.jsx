@@ -15,46 +15,56 @@ const categoryColors = {
 };
 
 const categoryLabels = {
-  contabil: "Contábil",
+  contabil: "Contabil",
   fiscal: "Fiscal", 
   folha_pagamento: "Folha de Pagamento",
-  tributaria: "Tributária",
-  reforma_tributaria: "Reforma Tributária",
+  tributaria: "Tributaria",
+  reforma_tributaria: "Reforma Tributaria",
   ifrs: "IFRS",
   usgaap: "US GAAP"
 };
 
 const importanceConfig = {
   alta: {
-    label: "Alta Importância",
+    label: "Alta Importancia",
     color: "bg-red-100 text-red-800 border-red-300",
     icon: AlertTriangle
   },
   media: {
-    label: "Importância Média",
+    label: "Importancia Media",
     color: "bg-yellow-100 text-yellow-800 border-yellow-300",
     icon: Info
   },
   baixa: {
-    label: "Baixa Importância",
+    label: "Baixa Importancia",
     color: "bg-green-100 text-green-800 border-green-300",
     icon: Info
   }
 };
 
-// Função para formatar data SEM fuso horário
+// Funcao para formatar data sem depender do fuso local
 function formatDateLocal(dateString) {
-  if (!dateString) return '';
-  
-  const [year, month, day] = dateString.split('-').map(Number);
-  const date = new Date(year, month - 1, day);
-  
+  if (!dateString) return "";
+
+  const [year, month, day] = dateString.split("-").map(Number);
+  const monthIndex = Number.isNaN(month) ? 0 : Math.max(0, Math.min(11, month - 1));
+
   const monthNames = [
-    'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
-    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+    "janeiro",
+    "fevereiro",
+    "marco",
+    "abril",
+    "maio",
+    "junho",
+    "julho",
+    "agosto",
+    "setembro",
+    "outubro",
+    "novembro",
+    "dezembro",
   ];
-  
-  return `${day} de ${monthNames[month - 1]} de ${year}`;
+
+  return `${day} de ${monthNames[monthIndex]} de ${year}`;
 }
 
 export default function NewsModal({ news, open, onOpenChange }) {
@@ -131,7 +141,7 @@ export default function NewsModal({ news, open, onOpenChange }) {
                   className="flex items-center gap-2"
                 >
                   <ExternalLink className="w-4 h-4" />
-                  Ver notícia completa
+                  Ver noticia completa
                 </a>
               </Button>
             )}

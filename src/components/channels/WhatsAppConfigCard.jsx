@@ -23,11 +23,11 @@ const categoryColors = {
 };
 
 const categoryLabels = {
-  contabil: "Contábil",
+  contabil: "Contabil",
   fiscal: "Fiscal",
   folha_pagamento: "Folha de Pagamento",
-  tributaria: "Tributária",
-  reforma_tributaria: "Reforma Tributária",
+  tributaria: "Tributaria",
+  reforma_tributaria: "Reforma Tributaria",
   geral: "Geral",
   ifrs: "IFRS",
   usgaap: "US GAAP"
@@ -35,7 +35,7 @@ const categoryLabels = {
 
 const importanceLabels = {
   baixa: "Baixa",
-  media: "Média",
+  media: "Media",
   alta: "Alta"
 };
 
@@ -70,7 +70,7 @@ export default function WhatsAppConfigCard({ config, onEdit, onDelete, onToggleA
                   </Badge>
                   {config.send_automatically && (
                     <Badge className="bg-green-100 text-green-800 text-xs">
-                      Automático
+                      Automatico
                     </Badge>
                   )}
                 </div>
@@ -82,14 +82,14 @@ export default function WhatsAppConfigCard({ config, onEdit, onDelete, onToggleA
         <CardContent>
           <div className="space-y-3">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Número:</span>
+              <span className="text-gray-600">Numero:</span>
               <code className="text-xs bg-gray-100 px-2 py-1 rounded">
                 {config.recipient_number}
               </code>
             </div>
             
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Importância Mínima:</span>
+              <span className="text-gray-600">Importancia Minima:</span>
               <Badge variant="outline" className="text-xs">
                 {importanceLabels[config.min_importance]}
               </Badge>
@@ -98,7 +98,7 @@ export default function WhatsAppConfigCard({ config, onEdit, onDelete, onToggleA
             {config.send_automatically && (
               <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 p-2 rounded">
                 <CheckCircle className="w-4 h-4" />
-                <span>Envio automático ativado</span>
+                <span>Envio automatico ativado</span>
               </div>
             )}
           </div>

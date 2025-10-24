@@ -28,11 +28,11 @@ export default function TeamsSettings({ onStatsUpdate }) {
         setTimeout(() => onStatsUpdate(), 500);
       }
     } catch (error) {
-      console.error("Erro ao carregar configurações:", error);
+      console.error("Erro ao carregar configuracoes:", error);
       if (error.response?.status === 429) {
-        setError("Muitas requisições. Por favor, aguarde alguns segundos e recarregue a página.");
+        setError("Muitas requisicoes. Por favor, aguarde alguns segundos e recarregue a pagina.");
       } else {
-        setError("Erro ao carregar configurações. Tente novamente.");
+        setError("Erro ao carregar configuracoes. Tente novamente.");
       }
     }
     setIsLoading(false);
@@ -57,8 +57,8 @@ export default function TeamsSettings({ onStatsUpdate }) {
       setEditingConfig(null);
       setTimeout(() => loadConfigs(), 500);
     } catch (error) {
-      console.error("Erro ao salvar configuração:", error);
-      alert("Ocorreu um erro ao salvar a configuração.");
+      console.error("Erro ao salvar configuracao:", error);
+      alert("Ocorreu um erro ao salvar a configuracao.");
     }
   };
 
@@ -68,12 +68,12 @@ export default function TeamsSettings({ onStatsUpdate }) {
   };
 
   const handleDelete = async (configId) => {
-    if (confirm("Tem certeza que deseja excluir esta configuração?")) {
+    if (confirm("Tem certeza que deseja excluir esta configuracao?")) {
       try {
         await TeamsConfig.delete(configId);
         setTimeout(() => loadConfigs(), 500);
       } catch (error) {
-        console.error("Erro ao excluir configuração:", error);
+        console.error("Erro ao excluir configuracao:", error);
       }
     }
   };
@@ -94,7 +94,7 @@ export default function TeamsSettings({ onStatsUpdate }) {
     <div>
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Configurações Microsoft Teams</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Configuracoes Microsoft Teams</h2>
           <p className="text-gray-500">Configure canais Teams via webhooks</p>
         </div>
         <Button 
@@ -174,19 +174,19 @@ export default function TeamsSettings({ onStatsUpdate }) {
       {isLoading ? (
         <div className="text-center py-12">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-          <p className="mt-4 text-gray-500">Carregando configurações...</p>
+          <p className="mt-4 text-gray-500">Carregando configuracoes...</p>
         </div>
       ) : !error && configs.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl shadow-sm">
           <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-500 mb-2">Nenhuma configuração Teams</h3>
+          <h3 className="text-xl font-semibold text-gray-500 mb-2">Nenhuma configuracao Teams</h3>
           <p className="text-gray-400 mb-6">Configure seu primeiro canal Microsoft Teams</p>
           <Button
             onClick={() => setShowForm(true)}
             className="bg-purple-600 hover:bg-purple-700"
           >
             <Plus className="w-5 h-5 mr-2" />
-            Criar Configuração
+            Criar Configuracao
           </Button>
         </div>
       ) : null}
