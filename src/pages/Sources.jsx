@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Globe, Settings, RefreshCw, AlertTriangle } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import { safeCreateNews, generateNewsViaLLM } from "@/components/utils/integrationHelpers";
+import { logger } from "@/lib/logger";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +23,7 @@ import SourceCard from "../components/sources/SourceCard";
 import SourceForm from "../components/sources/SourceForm";
 import { fetchRealNews } from "@/api/functions";
 import appLogo from "@/assets/logo.svg";
+import { AnimatedGradientBackground } from "@/components/ui/animated-gradient-background";
 
 export default function SourcesPage() {
   const [sources, setSources] = useState([]);
@@ -30,6 +32,7 @@ export default function SourcesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [scrapingSourceId, setScrapingSourceId] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [loadError, setLoadError] = useState(null);
   const { toast } = useToast();
 
@@ -188,10 +191,6 @@ export default function SourcesPage() {
   };
 
   const handleResetSources = async () => {
-    if (!confirm(' ATENCAO: isso ira apagar todas as fontes atuais e recriar o catalogo padrao. Deseja continuar?')) {
-      return;
-    }
-
     setIsLoading(true);
     try {
       const response = await resetSources();
@@ -202,11 +201,12 @@ export default function SourcesPage() {
           description: response.data.message,
         });
         await loadSources();
+        setShowResetConfirm(false);
       } else {
         throw new Error(response.data.error);
       }
     } catch (error) {
-      console.error('Erro ao resetar fontes:', error);
+      logger.error('Erro ao resetar fontes:', error);
       toast({
         variant: 'destructive',
         title: 'Erro ao recriar fontes',
@@ -221,20 +221,8 @@ export default function SourcesPage() {
   const inactiveSources = sources.filter(source => !source.is_active);
 
   return (
-    <div className="min-h-screen" style={{
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%)',
-      backgroundSize: '400% 400%',
-      animation: 'gradient 15s ease infinite'
-    }}>
-      <style>{`
-        @keyframes gradient {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-      `}</style>
-
-      <div className="min-h-screen bg-white/85 backdrop-blur-sm p-6">
+    <AnimatedGradientBackground>
+      <div className="p-6">
         <div className="max-w-6xl mx-auto">
           {/* Header com Logo */}
           <div className="bg-gradient-to-r from-[#002855] to-[#0066B3] rounded-2xl shadow-xl p-8 mb-8">
@@ -252,8 +240,8 @@ export default function SourcesPage() {
                 </div>
               </div>
               <div className="flex gap-3">
-                <Button 
-                  onClick={handleResetSources}
+                <Button
+                  onClick={() => setShowResetConfirm(true)}
                   disabled={isLoading}
                   className="bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-lg"
                 >
@@ -425,8 +413,36 @@ export default function SourcesPage() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        <AlertDialog open={showResetConfirm} onOpenChange={setShowResetConfirm}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2">
+                <RefreshCw className="w-5 h-5 text-orange-600" />
+                Resetar Fontes
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                <strong className="text-orange-600">ATENCAO:</strong> Esta acao ira apagar{" "}
+                <strong>{sources.length} fonte(s)</strong> atuais e recriar o catalogo padrao
+                com fontes RSS pre-configuradas.
+                <br /><br />
+                <strong className="text-red-600">Esta acao nao pode ser desfeita!</strong>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isLoading}>Cancelar</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleResetSources}
+                disabled={isLoading}
+                className="bg-orange-600 hover:bg-orange-700"
+              >
+                {isLoading ? 'Resetando...' : 'Sim, resetar fontes'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
-    </div>
+    </AnimatedGradientBackground>
   );
 }
 
