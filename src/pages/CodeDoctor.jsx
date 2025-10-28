@@ -59,7 +59,7 @@ function ConversationList({ onSelectConversation }) {
                     {conversations.map(conv => (
                         <Link
                             key={conv.id}
-                            to={createPageUrl(`CodeDoctor?conversationId=${conv.id}`)}
+                            to={`${createPageUrl("CodeDoctor")}?conversationId=${conv.id}`}
                             className="block p-4 rounded-lg bg-slate-50 border border-slate-200 hover:bg-white hover:shadow-md transition-all"
                         >
                             <div className="flex items-center justify-between">
