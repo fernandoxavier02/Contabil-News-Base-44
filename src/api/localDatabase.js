@@ -369,21 +369,116 @@ async function verifyNewsDates(params) {
     return { data };
   }
 
+  // Fallback local (modo demo): gera um relatorio compatível com a UI
   const records = await newsStore.list();
   const today = new Date().toISOString().split("T")[0];
-  const invalid = records.filter((item) => item.publication_date > today);
+
+  // Determinar amostra
+  const requestedSample = Number(params?.sample_size);
+  const sampleSize = Math.max(
+    1,
+    Math.min(
+      Number.isFinite(requestedSample) ? requestedSample : 10,
+      Math.min(50, records.length || 0)
+    )
+  );
+  const sample = records.slice(0, sampleSize);
+
+  // Classificar itens incorretos (datas futuras) na amostra
+  const isFuture = (iso) => (iso || "") > today;
+  const incorrectItems = sample.filter((item) => isFuture(item.publication_date));
+  const correctItems = sample.filter((item) => !isFuture(item.publication_date));
+
+  // Montar resultados detalhados esperados pela UI
+  function formatDateISO(d) {
+    try {
+      const dt = new Date(d);
+      if (Number.isNaN(dt.getTime())) return null;
+      return dt.toISOString().split("T")[0];
+    } catch {
+      return null;
+    }
+  }
+
+  function daysDiff(aIso, bIso) {
+    const a = new Date(aIso);
+    const b = new Date(bIso);
+    if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime())) return 0;
+    const ms = a.getTime() - b.getTime();
+    return Math.max(0, Math.round(ms / (1000 * 60 * 60 * 24)));
+  }
+
+  const results = [];
+
+  // Itens corretos
+  for (const item of correctItems) {
+    results.push({
+      title: item.title,
+      saved_date: item.publication_date,
+      found_date: item.publication_date, // no demo, usamos a mesma data
+      difference_days: 0,
+      status: "correct",
+      external_url: item.external_url || null,
+      source: item.source_name || "local-demo",
+      confidence: "medium",
+      message:
+        "Modo demonstracao: verificação local simulada. Configure `verifyNewsDates` para auditoria real.",
+    });
+  }
+
+  // Itens incorretos (data futura)
+  for (const item of incorrectItems) {
+    const saved = item.publication_date;
+    const todayIso = today;
+    results.push({
+      title: item.title,
+      saved_date: saved,
+      found_date: todayIso, // simulamos que a fonte indica a data de hoje
+      difference_days: daysDiff(saved, todayIso),
+      status: "incorrect",
+      external_url: item.external_url || null,
+      source: item.source_name || "local-demo",
+      confidence: "low",
+      message:
+        "Data salva parece estar no futuro em relacao a data atual.",
+    });
+  }
+
+  const totalVerified = sample.length;
+  const incorrectCount = incorrectItems.length;
+  const correctCount = Math.max(0, totalVerified - incorrectCount);
+  const unableToVerify = 0;
+  const accuracy = totalVerified > 0 ? Math.round((correctCount / totalVerified) * 100) : 100;
+
+  // Campos antigos mantidos para compatibilidade (caso outra UI use)
+  const invalidAll = records.filter((item) => item.publication_date > today);
 
   return {
     data: {
       success: true,
+      // Novos campos esperados pela UI do DateVerifier
+      total_verified: totalVerified,
+      correct_dates: correctCount,
+      incorrect_dates: incorrectCount,
+      unable_to_verify: unableToVerify,
+      accuracy_percentage: accuracy,
+      summary: {
+        recommendation:
+          incorrectCount === 0
+            ? "Todas as amostras parecem corretas no modo de demonstracao."
+            : "Foram encontradas datas possivelmente incorretas. Revise o processo de ingestao de datas.",
+      },
+      results,
+
+      // Campos de compatibilidade
       total_news: records.length,
-      invalid_dates: invalid.map((item) => ({
+      invalid_dates: invalidAll.map((item) => ({
         id: item.id,
         title: item.title,
         publication_date: item.publication_date,
       })),
       message:
-        "Modo demonstracao: nenhuma verificacao externa executada. Configure `verifyNewsDates` para auditoria real.",
+        "Modo demonstracao: verificação local simulada. Configure `verifyNewsDates` para auditoria real.",
     },
   };
 }
